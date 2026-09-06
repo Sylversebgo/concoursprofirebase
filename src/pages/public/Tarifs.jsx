@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 import { Check } from 'lucide-react';
 
 const PLANS = [
-  { name: 'Gratuit', price: '0 FCFA', features: ['Accès à 1 module', 'Essai limité', 'Support communautaire'] },
-  { name: 'Standard', price: '5 000 FCFA/mois', features: ['Tous les modules', 'Examens blancs illimités', 'Suivi de progression'], highlight: true },
-  { name: 'Premium', price: '10 000 FCFA/mois', features: ['Tout Standard', 'Correction personnalisée', 'Support prioritaire'] },
+  { name: 'Gratuit', price: '', features: ['Accès à 1 module', 'Essai limité', 'Support communautaire'] },
+  { name: 'Standard', price: '', features: ['Tous les modules', 'Examens blancs illimités', 'Suivi de progression'], highlight: true },
+  { name: 'Premium', price: '', features: ['Tout Standard', 'Correction personnalisée', 'Support prioritaire'] },
 ];
 
 export default function Tarifs() {

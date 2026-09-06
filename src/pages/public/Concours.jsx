@@ -14,7 +14,7 @@ export default function Concours() {
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-16 md:px-10">
-      <h1 className="mb-2 font-display text-3xl font-bold text-ink">Concours & modules disponibles</h1>
+      <h1 className="mb-2 font-display text-3xl font-bold text-ink">Formations & modules disponibles</h1>
       <p className="mb-10 text-gray-500">Choisissez le module que vous souhaitez préparer.</p>
 
       {modules === null ? (
