@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #1d2a4a;
+  --color-brand: #1f5fe8;
+  --color-brand-deep: #163f9e;
+  --color-gold: #d9a441;
+  --color-success: #1f9d63;
+  --font-display: "Fraunces", ui-serif, serif;
+  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  color: #1d2a4a;
+  background: #f7f9fc;
+}

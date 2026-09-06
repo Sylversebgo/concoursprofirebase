@@ -1,0 +1,123 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Fonctions utilitaires ----------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function getRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (getRole() == 'admin' || getRole() == 'superadmin');
+    }
+
+    function isSuperAdmin() {
+      return isSignedIn() && getRole() == 'superadmin';
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // ---------- users ----------
+    // Chaque utilisateur lit/modifie son propre document (sauf role/status).
+    // Les admins peuvent tout lire. Seul superadmin gère les comptes admin.
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+
+      // Auto-inscription publique : un utilisateur non connecté peut créer
+      // SON PROPRE document, uniquement avec role = "candidat" ET
+      // accountType = "free" (empêche de se déclarer "payant" soi-même).
+      allow create: if isOwner(userId)
+        && request.resource.data.role == 'candidat'
+        && request.resource.data.accountType == 'free';
+
+      // Un admin (ou superadmin) peut créer un compte CANDIDAT "payant"
+      // pour un tiers (ex: création manuelle depuis "Utilisateurs"). Créer
+      // un compte admin reste réservé au superadmin (dernière règle ci-dessous).
+      allow create: if isAdmin()
+        && request.resource.data.role == 'candidat'
+        && request.resource.data.accountType == 'paid';
+
+      // Un utilisateur peut modifier son propre profil (nom, téléphone...),
+      // mais jamais son role/status/accountType (empêche de s'auto-promouvoir).
+      allow update: if isOwner(userId)
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.status == resource.data.status
+        && request.resource.data.accountType == resource.data.accountType;
+
+      // Les admins/superadmins peuvent modifier n'importe quel profil candidat.
+      allow update: if isAdmin() && resource.data.role == 'candidat';
+
+      // Seul superadmin crée/modifie/supprime des comptes admin.
+      allow create, update, delete: if isSuperAdmin();
+    }
+
+    // ---------- Contenu pédagogique : lecture publique, écriture admin ----------
+    match /modules/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /questions/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /contests/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /exams/{id} {
+      allow read: if true;
+      // Gestion des examens réservée au superadmin (l'admin n'a pas ce droit).
+      allow write: if isSuperAdmin();
+    }
+
+    // ---------- Configuration de l'essai gratuit (10 QCM) ----------
+    // Lecture publique (même non connecté, pour la page d'essai gratuit),
+    // modifiable uniquement par le superadmin.
+    match /freeTrialConfig/{id} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // ---------- Tentatives / résultats candidats ----------
+    match /submissions/{id} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.candidateId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.candidateId == request.auth.uid;
+      // Seuls les admins peuvent corriger (modifier après création).
+      allow update: if isAdmin();
+    }
+
+    match /results/{id} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.candidateId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.candidateId == request.auth.uid;
+    }
+
+    // ---------- Documents ----------
+    match /documents/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // ---------- Notifications ----------
+    match /notifications/{id} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin();
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid; // marquer comme lue
+    }
+
+    // ---------- Messagerie ----------
+    match /messages/{id} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.conversationId == request.auth.uid);
+      allow create: if isAdmin() || (isSignedIn() && request.resource.data.conversationId == request.auth.uid);
+    }
+  }
+}
