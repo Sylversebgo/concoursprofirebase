@@ -11,13 +11,19 @@ export default function ModuleDetail() {
   const moduleId = params.get('id');
   const [module, setModule] = useState(null);
   const [questionCount, setQuestionCount] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!moduleId) return;
-    modulesService.getById(moduleId).then(setModule);
-    questionsService.getByModule(moduleId).then((qs) => setQuestionCount(qs.length));
+    modulesService.getById(moduleId)
+      .then(setModule)
+      .catch(() => setError('Impossible de charger ce module.'));
+    questionsService.getByModule(moduleId)
+      .then((qs) => setQuestionCount(qs.length))
+      .catch(() => setError('Impossible de charger les questions de ce module.'));
   }, [moduleId]);
 
+  if (error) return <p className="rounded-xl bg-red-50 p-4 text-sm text-red-600">{error}</p>;
   if (!module) {
     return <div className="flex justify-center py-16"><Spinner /></div>;
   }

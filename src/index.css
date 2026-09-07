@@ -15,3 +15,18 @@ body {
   color: #1d2a4a;
   background: #f7f9fc;
 }
+
+.admission-card {
+  animation: admission-card-float 5s ease-in-out infinite;
+}
+
+@keyframes admission-card-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.5rem);
+  }
+}

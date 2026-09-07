@@ -7,9 +7,13 @@ import EmptyState from '../../components/ui/EmptyState';
 
 export default function MesModules() {
   const [modules, setModules] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const unsub = modulesService.subscribeActive(setModules);
+    const unsub = modulesService.subscribeActive(setModules, () => {
+      setError('Impossible de charger les modules. Vérifiez votre connexion ou contactez un administrateur.');
+      setModules([]);
+    });
     return unsub;
   }, []);
 
@@ -19,6 +23,8 @@ export default function MesModules() {
 
       {modules === null ? (
         <div className="flex justify-center py-16"><Spinner /></div>
+      ) : error ? (
+        <EmptyState icon={BookOpen} title={error} />
       ) : modules.length === 0 ? (
         <EmptyState icon={BookOpen} title="Aucun module disponible pour le moment" />
       ) : (

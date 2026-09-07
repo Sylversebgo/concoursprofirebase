@@ -13,11 +13,16 @@ export default function Entrainement() {
   const navigate = useNavigate();
   const [module, setModule] = useState(null);
   const [questions, setQuestions] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!moduleId) return;
-    modulesService.getById(moduleId).then(setModule);
-    questionsService.getByModule(moduleId).then(setQuestions);
+    modulesService.getById(moduleId)
+      .then(setModule)
+      .catch(() => setError('Impossible de charger ce module.'));
+    questionsService.getByModule(moduleId)
+      .then(setQuestions)
+      .catch(() => setError('Impossible de charger les questions de ce module.'));
   }, [moduleId]);
 
   function handleStart() {
@@ -25,6 +30,7 @@ export default function Entrainement() {
     navigate('/entrainement-questions');
   }
 
+  if (error) return <p className="rounded-xl bg-red-50 p-4 text-sm text-red-600">{error}</p>;
   if (!module || questions === null) {
     return <div className="flex justify-center py-16"><Spinner /></div>;
   }

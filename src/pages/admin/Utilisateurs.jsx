@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { initializeApp, deleteApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Users, Search, Plus, Pencil, Trash2 } from 'lucide-react';
 import { db, app as primaryApp } from '../../firebase/config';
@@ -58,6 +58,21 @@ export default function Utilisateurs() {
     const newStatus = u.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     await usersService.update(u.id, { status: newStatus });
     setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, status: newStatus } : x)));
+  }
+
+  async function activateCandidate(u) {
+    if (!confirm(`Activer l'accès payant de ${u.firstName} ${u.lastName} et envoyer un lien de création de mot de passe ?`)) return;
+    setError('');
+    try {
+      await usersService.update(u.id, { accountType: 'paid', status: 'ACTIVE' });
+      await sendPasswordResetEmail(getAuth(primaryApp), u.email);
+      setEmailStatus('activation_sent');
+      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, accountType: 'paid', status: 'ACTIVE' } : x)));
+    } catch (err) {
+      setError(err.code === 'auth/user-not-found'
+        ? 'Le compte Firebase de ce candidat est introuvable.'
+        : "Le candidat a été activé, mais l'e-mail de création du mot de passe n'a pas pu être envoyé.");
+    }
   }
 
   // Suppression réservée au superadmin (supprime le profil Firestore ;
@@ -150,6 +165,12 @@ export default function Utilisateurs() {
           Compte créé et e-mail envoyé avec les identifiants ✓
         </p>
       )}
+      {emailStatus === 'activation_sent' && (
+        <p className="mb-5 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
+          Candidat activé et e-mail de création du mot de passe envoyé ✓
+        </p>
+      )}
+      {error && <p className="mb-5 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
 
       <div className="mb-5 max-w-sm">
         <div className="relative">
@@ -188,6 +209,11 @@ export default function Utilisateurs() {
                   <td className="px-4 py-3"><Badge tone={u.status === 'ACTIVE' ? 'green' : 'red'}>{u.status}</Badge></td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-3">
+                      {u.accountType !== 'paid' && (
+                        <button onClick={() => activateCandidate(u)} className="text-xs font-bold text-green-700">
+                          Activer après paiement
+                        </button>
+                      )}
                       <button onClick={() => toggleStatus(u)} className="text-xs font-bold text-brand">
                         {u.status === 'ACTIVE' ? 'Désactiver' : 'Activer'}
                       </button>

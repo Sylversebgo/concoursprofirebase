@@ -34,11 +34,13 @@ export async function getAll(collectionName, constraints = []) {
 // à chaque ajout/modification/suppression (par n'importe quel utilisateur,
 // admin ou candidat) — c'est ça qui rend tout instantané dans toute l'app.
 // Retourne une fonction de désabonnement à appeler au démontage du composant.
-export function subscribe(collectionName, constraints, callback) {
+export function subscribe(collectionName, constraints, callback, onError) {
   const q = query(collection(db, collectionName), ...constraints);
-  return onSnapshot(q, (snap) => {
-    callback(snap.docs.map(docToObject));
-  });
+  return onSnapshot(
+    q,
+    (snap) => callback(snap.docs.map(docToObject)),
+    onError,
+  );
 }
 
 export async function getById(collectionName, id) {

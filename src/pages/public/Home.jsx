@@ -1,31 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpenText, ClipboardCheck, BarChart3, Landmark, Briefcase, ChevronDown } from 'lucide-react';
+import { BookOpenText, ClipboardCheck, BarChart3, Landmark, Briefcase, ChevronDown, X } from 'lucide-react';
 
 const FORMATIONS = [
   {
     icon: Landmark,
     title: 'Concours directs',
-    summary: "Pour les nouveaux diplômés qui intègrent la fonction publique ou une entreprise pour la première fois.",
-    details: [
-      'Ouvert dès l\'obtention du diplôme requis, sans expérience professionnelle exigée.',
-      'Épreuves de culture générale, spécialité et parfois entretien de motivation.',
-      'Modules disponibles : Fonction publique, Enseignement, Banque.',
-    ],
   },
   {
     icon: Briefcase,
     title: 'Concours professionnels',
-    summary: "Pour les agents déjà en poste qui souhaitent évoluer ou changer de catégorie.",
-    details: [
-      'Réservé aux candidats justifiant d\'une expérience professionnelle minimale.',
-      'Épreuves souvent plus techniques, centrées sur le métier exercé.',
-      'Une bonne voie pour progresser sans repartir de zéro.',
-    ],
   },
 ];
 
-function FormationCard({ icon: Icon, title, summary, details }) {
+function FormationCard({ icon: Icon, title }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -44,7 +32,6 @@ function FormationCard({ icon: Icon, title, summary, details }) {
       </div>
 
       <h3 className="mt-4 text-lg font-bold text-ink">{title}</h3>
-      <p className="mt-1 text-sm text-gray-500">{summary}</p>
 
       {/* Astuce grid-rows [0fr -> 1fr] : anime la hauteur en douceur,
           même si le contenu déplié a une hauteur variable/inconnue. */}
@@ -54,18 +41,10 @@ function FormationCard({ icon: Icon, title, summary, details }) {
         }`}
       >
         <div className="overflow-hidden">
-          <ul className="flex flex-col gap-2 border-t border-black/5 pt-4 text-sm text-gray-600">
-            {details.map((line) => (
-              <li key={line} className="flex gap-2">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
-                {line}
-              </li>
-            ))}
-          </ul>
           <Link
             to="/concours"
             onClick={(e) => e.stopPropagation()}
-            className="mt-4 inline-block text-sm font-bold text-brand hover:underline"
+            className="border-t border-black/5 pt-4 text-sm font-bold text-brand hover:underline"
           >
             Voir les modules disponibles →
           </Link>
@@ -76,19 +55,107 @@ function FormationCard({ icon: Icon, title, summary, details }) {
 }
 
 export default function Home() {
+  const [toastVisible, setToastVisible] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [statsTitleVisible, setStatsTitleVisible] = useState(false);
+  const [registeredCount, setRegisteredCount] = useState(0);
+  const [statsMessageVisible, setStatsMessageVisible] = useState(false);
+  const [joinMessageVisible, setJoinMessageVisible] = useState(false);
+  const statsSectionRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setToastVisible(false), 6000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((current) => {
+        if (current >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return Math.min(current + 2, 100);
+      });
+    }, 40);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    let countInterval;
+    let titleTimer;
+    let countStartTimer;
+    let statsMessageTimer;
+    let joinMessageTimer;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+
+      titleTimer = setTimeout(() => setStatsTitleVisible(true), 250);
+      countStartTimer = setTimeout(() => {
+        countInterval = setInterval(() => {
+          setRegisteredCount((current) => {
+            if (current >= 110) {
+              clearInterval(countInterval);
+              return 110;
+            }
+            const nextCount = Math.min(current + 2, 110);
+            if (nextCount === 110) {
+              clearInterval(countInterval);
+              statsMessageTimer = setTimeout(() => setStatsMessageVisible(true), 350);
+              joinMessageTimer = setTimeout(() => setJoinMessageVisible(true), 1_150);
+            }
+            return nextCount;
+          });
+        }, 35);
+      }, 900);
+    }, { threshold: 0.35 });
+
+    if (statsSectionRef.current) observer.observe(statsSectionRef.current);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(titleTimer);
+      clearTimeout(countStartTimer);
+      clearInterval(countInterval);
+      clearTimeout(statsMessageTimer);
+      clearTimeout(joinMessageTimer);
+    };
+  }, []);
+
   return (
     <div>
+      {toastVisible && (
+        <div className="fixed right-4 top-4 z-50 w-[min(22rem,calc(100vw-2rem))] rounded-xl border border-black/10 bg-white p-4 shadow-xl" role="alert" aria-live="polite" aria-atomic="true">
+          <div className="flex items-start gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-ink">Bienvenue sur ConcoursPro</p>
+              <p className="mt-1 text-sm text-gray-500">Commencez votre préparation dès aujourd'hui.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setToastVisible(false)}
+              className="shrink-0 rounded-lg p-1 text-gray-400 hover:bg-black/5 hover:text-ink"
+              aria-label="Fermer la notification"
+            >
+              <X size={17} />
+            </button>
+          </div>
+        </div>
+      )}
+
       <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-5 py-16 md:grid-cols-2 md:px-10 md:py-24">
         <div>
           <span className="mb-5 inline-block rounded-full bg-blue-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide text-brand-deep">
             Préparation pour les concours directs et professionnels
           </span>
           <h1 className="font-display text-4xl font-bold leading-tight text-ink md:text-6xl">
-            Préparez le concours qui <span className="text-brand">va changer votre vie.</span>
+            Préparez-vous au concours
           </h1>
           <p className="mt-5 max-w-lg text-lg text-gray-500">
-            Entraînez-vous avec des questions corrigées  et suivez votre
-            progression jusqu'au jour de l'examen.
+            Travaillez avec des questions corrigées et suivez vos progrès.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/essai-gratuit" className="rounded-xl bg-gradient-to-br from-blue-600 to-brand-deep px-6 py-3.5 font-bold text-white shadow-lg shadow-brand/20">
@@ -99,13 +166,44 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="rounded-3xl bg-gradient-to-br from-ink to-brand-deep p-10 text-white shadow-2xl">
+        <div className="admission-card rounded-3xl bg-gradient-to-br from-ink to-brand-deep p-10 text-white shadow-2xl">
           <p className="font-display text-2xl font-bold">ConcoursPro</p>
           <p className="mt-2 text-sm text-white/70">Carte d'admission</p>
           <div className="mt-8 h-2 w-full rounded-full bg-white/15">
-            <div className="h-2 w-3/4 rounded-full bg-brand" />
+            <div className="h-2 rounded-full bg-brand transition-[width] duration-75" style={{ width: `${progress}%` }} />
           </div>
-          <p className="mt-2 text-xs text-white/60">Progression : 75%</p>
+          <p className="mt-2 text-xs text-white/60">Progression : {progress}%</p>
+        </div>
+      </section>
+
+      <section ref={statsSectionRef} className="mx-auto max-w-6xl px-5 pb-20 md:px-10">
+        <div className="rounded-2xl border border-black/5 bg-white px-6 py-10 text-center shadow-sm md:px-10">
+          <h2
+            className={`font-display text-3xl font-bold text-ink transition-all duration-1000 ease-out ${
+              statsTitleVisible ? 'translate-y-0 opacity-100' : '-translate-y-8 opacity-0'
+            }`}
+          >
+            Statistique réel
+          </h2>
+          <div className="mt-8 grid items-center gap-8 md:grid-cols-[1fr_auto_1fr] md:gap-10">
+            <p
+              className={`text-lg font-bold text-ink transition-all duration-700 ease-out ${
+                statsMessageVisible ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
+              }`}
+            >
+              Plus de 100 personnes déjà inscrites !
+            </p>
+            <p className="font-display text-7xl font-bold leading-none text-brand" aria-live="polite">
+              {registeredCount}
+            </p>
+            <p
+              className={`text-lg font-bold text-ink transition-all duration-700 ease-out ${
+                joinMessageVisible ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
+              }`}
+            >
+              Qu'attends-tu pour nous rejoindre ?
+            </p>
+          </div>
         </div>
       </section>
 
@@ -113,7 +211,7 @@ export default function Home() {
         <h2 className="mb-8 text-center font-display text-3xl font-bold text-ink">Pourquoi ConcoursPro ?</h2>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {[
-            { icon: BookOpenText, title: 'Formations', text: 'Des cours complets et structurés par des experts.' },
+            { icon: BookOpenText, title: 'Formation', text: 'Une formation adaptée à vos besoins.' },
             { icon: ClipboardCheck, title: 'Quiz', text: 'Des milliers de questions corrigées et expliquées.' },
             { icon: BarChart3, title: 'Progression', text: 'Un suivi détaillé pour cibler vos révisions.' },
           ].map(({ icon: Icon, title, text }) => (

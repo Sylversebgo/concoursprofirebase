@@ -4,7 +4,7 @@ import { Menu, X, GraduationCap, Phone, Mail, MapPin } from 'lucide-react';
 
 const NAV = [
   { to: '/', label: 'Accueil' },
-  { to: '/concours', label: 'Concours' },
+  { to: '/a-propos', label: 'À propos de nous' },
   { to: '/tarifs', label: 'Tarifs' },
   { to: '/contact', label: 'Contact' },
 ];
