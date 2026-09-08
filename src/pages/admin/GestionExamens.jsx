@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2, ClipboardList, Send } from 'lucide-react';
+import { Plus, Pencil, Trash2, ClipboardList, Send, Lock, Unlock } from 'lucide-react';
 import * as examsService from '../../services/examsService';
 import * as modulesService from '../../services/modulesService';
 import * as questionsService from '../../services/questionsService';
@@ -12,7 +12,7 @@ import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import Badge from '../../components/ui/Badge';
 
-const EMPTY_FORM = { title: '', description: '', moduleId: '', durationMinutes: 60, published: false, questionIds: [] };
+const EMPTY_FORM = { title: '', description: '', moduleId: '', durationMinutes: 60, published: false, status: 'OPEN', questionIds: [] };
 
 export default function GestionExamens() {
   const [exams, setExams] = useState(null);
@@ -57,7 +57,7 @@ export default function GestionExamens() {
   }
 
   async function handlePublish(exam) {
-    await examsService.update(exam.id, { published: true, status: 'PUBLISHED' });
+    await examsService.update(exam.id, { published: true, status: 'OPEN' });
     const candidats = await usersService.getCandidats();
     await Promise.all(candidats.map((c) => notificationsService.create({
       userId: c.id,
@@ -67,6 +67,10 @@ export default function GestionExamens() {
       link: '/examens',
       read: false,
     })));
+  }
+
+  async function toggleExamStatus(exam) {
+    await examsService.update(exam.id, { status: exam.status === 'CLOSED' ? 'OPEN' : 'CLOSED' });
   }
 
   function toggleQuestion(qId) {
@@ -93,6 +97,7 @@ export default function GestionExamens() {
                 <p className="font-semibold text-ink">{exam.title}</p>
                 <div className="mt-1 flex gap-2">
                   <Badge tone={exam.published ? 'green' : 'gray'}>{exam.published ? 'Publié' : 'Brouillon'}</Badge>
+                  <Badge tone={exam.status === 'CLOSED' ? 'gray' : 'green'}>{exam.status === 'CLOSED' ? 'Fermé' : 'Ouvert'}</Badge>
                   <Badge tone="blue">{exam.durationMinutes} min</Badge>
                   <Badge tone="gold">{(exam.questionIds || []).length} questions</Badge>
                 </div>
@@ -101,6 +106,11 @@ export default function GestionExamens() {
                 {!exam.published && (
                   <button onClick={() => handlePublish(exam)} className="rounded-lg p-2 text-gray-400 hover:bg-green-50 hover:text-green-600" title="Publier">
                     <Send size={16} />
+                  </button>
+                )}
+                {exam.published && (
+                  <button onClick={() => toggleExamStatus(exam)} className="rounded-lg p-2 text-gray-400 hover:bg-amber-50 hover:text-amber-600" title={exam.status === 'CLOSED' ? 'Ouvrir l’examen' : 'Fermer l’examen'}>
+                    {exam.status === 'CLOSED' ? <Unlock size={16} /> : <Lock size={16} />}
                   </button>
                 )}
                 <button onClick={() => openEdit(exam)} className="rounded-lg p-2 text-gray-400 hover:bg-black/5 hover:text-brand"><Pencil size={16} /></button>

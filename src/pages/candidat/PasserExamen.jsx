@@ -77,6 +77,16 @@ export default function PasserExamen() {
     return <div className="flex justify-center py-16"><Spinner /></div>;
   }
 
+  if (exam.status === 'CLOSED') {
+    return (
+      <div className="mx-auto max-w-lg rounded-2xl bg-gray-100 p-8 text-center">
+        <h1 className="mb-2 font-display text-2xl font-bold text-ink">Examen fermé</h1>
+        <p className="mb-6 text-gray-500">Cet examen n’est pas accessible pour le moment.</p>
+        <Button variant="secondary" onClick={() => navigate('/examens')}>Retour aux examens</Button>
+      </div>
+    );
+  }
+
   if (!started) {
     return (
       <div className="mx-auto max-w-lg text-center">

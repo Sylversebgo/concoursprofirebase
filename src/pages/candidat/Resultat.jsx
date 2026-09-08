@@ -23,7 +23,7 @@ export default function Resultat() {
     <div className="mx-auto max-w-2xl">
       <div className="mb-8 rounded-2xl bg-gradient-to-br from-ink to-brand-deep p-8 text-center text-white">
         <Trophy className="mx-auto mb-3" size={32} />
-        <p className="text-5xl font-bold">{session.score}%</p>
+        <p className="text-5xl font-bold">{session.mode === 'evaluation' ? `${session.score}/20` : `${session.score}%`}</p>
         <p className="mt-2 text-white/70">
           {session.correctCount} bonnes réponses sur {session.questions.length}
         </p>

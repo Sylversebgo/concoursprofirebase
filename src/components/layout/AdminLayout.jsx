@@ -19,16 +19,17 @@ const BASE_ITEMS = [
   { to: '/notifications', label: 'Notifications', icon: Bell },
 ];
 
-// Réservé au superadmin : gestion des examens, de l'essai gratuit et des admins.
+// La gestion des examens est accessible aux admins et superadmins.
 const SUPERADMIN_ITEMS = [
-  { to: '/gestion-examens', label: 'Examens', icon: ClipboardList },
   { to: '/essai-gratuit-admin', label: 'Essai gratuit', icon: Sparkles },
   { to: '/gestion-admins', label: 'Gestion admins', icon: ShieldCheck },
 ];
 
 export default function AdminLayout({ children }) {
   const { hasRole } = useAuth();
-  const items = hasRole('superadmin') ? [...BASE_ITEMS, ...SUPERADMIN_ITEMS] : BASE_ITEMS;
+  const items = hasRole('superadmin')
+    ? [...BASE_ITEMS, { to: '/gestion-examens', label: 'Examens', icon: ClipboardList }, ...SUPERADMIN_ITEMS]
+    : [...BASE_ITEMS, { to: '/gestion-examens', label: 'Examens', icon: ClipboardList }];
 
   return (
     <DashboardLayout items={items} title="Espace administration">

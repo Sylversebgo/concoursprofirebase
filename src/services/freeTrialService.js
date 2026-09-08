@@ -15,13 +15,13 @@ export async function getFreeTrialQuestions() {
   if (configuredIds.length > 0) {
     const questions = await Promise.all(configuredIds.map((id) => questionsService.getById(id)));
     const valid = questions.filter(Boolean);
-    if (valid.length > 0) return valid;
+    if (valid.length > 0) return valid.slice(0, 50);
   }
 
   // Repli : 10 questions aléatoires parmi toutes les questions actives.
   const all = await questionsService.getAll();
   const active = all.filter((q) => q.active);
-  return shuffle(active).slice(0, 10);
+  return shuffle(active).slice(0, 50);
 }
 
 export async function getConfiguredQuestionIds() {

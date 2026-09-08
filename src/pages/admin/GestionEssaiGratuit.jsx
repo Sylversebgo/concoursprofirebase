@@ -30,7 +30,7 @@ export default function GestionEssaiGratuit() {
     setSaved(false);
     setSelectedIds((prev) => {
       if (prev.includes(id)) return prev.filter((x) => x !== id);
-      if (prev.length >= 10) return prev; // max 10
+      if (prev.length >= 50) return prev; // max 50
       return [...prev, id];
     });
   }
@@ -53,10 +53,10 @@ export default function GestionEssaiGratuit() {
     <div>
       <div className="mb-2 flex items-center gap-2">
         <Sparkles size={22} className="text-brand" />
-        <h1 className="font-display text-2xl font-bold text-ink">Essai gratuit (10 QCM)</h1>
+        <h1 className="font-display text-2xl font-bold text-ink">Essai gratuit (50 QCM maximum)</h1>
       </div>
       <p className="mb-6 max-w-xl text-sm text-gray-500">
-        Choisis les 10 questions que verront les visiteurs qui cliquent sur
+        Choisis jusqu'à 50 questions que verront les visiteurs qui cliquent sur
         "Commencer gratuitement" (et les candidats qui n'ont pas encore payé).
         Tu peux les changer à tout moment — le changement est pris en compte
         immédiatement.
@@ -64,7 +64,7 @@ export default function GestionEssaiGratuit() {
 
       <div className="mb-5 flex items-center justify-between rounded-xl border border-black/5 bg-white px-4 py-3">
         <p className="text-sm font-bold text-ink">
-          {selectedIds.length} / 10 questions sélectionnées
+          {selectedIds.length} / 50 questions sélectionnées
         </p>
         <Button onClick={handleSave} disabled={saving || selectedIds.length === 0}>
           {saving ? 'Enregistrement…' : saved ? 'Enregistré ✓' : 'Enregistrer la sélection'}
@@ -74,7 +74,7 @@ export default function GestionEssaiGratuit() {
       <div className="flex flex-col gap-2">
         {questions.map((q) => {
           const isSelected = selectedIds.includes(q.id);
-          const disabled = !isSelected && selectedIds.length >= 10;
+          const disabled = !isSelected && selectedIds.length >= 50;
           return (
             <button
               key={q.id}

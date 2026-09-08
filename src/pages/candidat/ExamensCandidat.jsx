@@ -25,17 +25,20 @@ export default function ExamensCandidat() {
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {exams.map((exam) => (
-            <div key={exam.id} className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
+            <div key={exam.id} className={`rounded-2xl border border-black/5 p-6 shadow-sm ${exam.status === 'CLOSED' ? 'bg-gray-100 opacity-60' : 'bg-white'}`}>
               <Badge tone="blue">{exam.durationMinutes} min</Badge>
+              {exam.status === 'CLOSED' && <Badge tone="gray">Examen fermé</Badge>}
               <h3 className="mt-3 mb-1 font-bold text-ink">{exam.title}</h3>
               <p className="mb-4 text-sm text-gray-500">{exam.description}</p>
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-1 text-xs text-gray-400">
                   <Clock size={13} /> {(exam.questionIds || []).length} questions
                 </span>
-                <Link to={`/passer-examen/${exam.id}`} className="text-sm font-bold text-brand">
-                  Commencer →
-                </Link>
+                {exam.status === 'CLOSED' ? (
+                  <span className="text-sm font-bold text-gray-500">Accès fermé</span>
+                ) : (
+                  <Link to={`/passer-examen/${exam.id}`} className="text-sm font-bold text-brand">Commencer →</Link>
+                )}
               </div>
             </div>
           ))}

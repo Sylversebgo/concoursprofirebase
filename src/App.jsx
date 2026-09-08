@@ -116,7 +116,7 @@ function AppRoutes() {
       <Route path="/import-csv" element={protect(['admin', 'superadmin'], AdminLayout, ImportCsv)} />
       <Route path="/verification-csv" element={protect(['admin', 'superadmin'], AdminLayout, VerificationCsv)} />
       <Route path="/gestion-modules" element={protect(['admin', 'superadmin'], AdminLayout, GestionModules)} />
-      <Route path="/gestion-examens" element={protect(['superadmin'], AdminLayout, GestionExamens)} />
+      <Route path="/gestion-examens" element={protect(['admin', 'superadmin'], AdminLayout, GestionExamens)} />
       <Route path="/essai-gratuit-admin" element={protect(['superadmin'], AdminLayout, GestionEssaiGratuit)} />
       <Route path="/copies-examens" element={protect(['admin', 'superadmin'], AdminLayout, CopiesExamens)} />
       <Route path="/correction-copie/:id" element={protect(['admin', 'superadmin'], AdminLayout, CorrectionCopie)} />

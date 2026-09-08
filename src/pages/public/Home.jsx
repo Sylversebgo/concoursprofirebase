@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpenText, ClipboardCheck, BarChart3, Landmark, Briefcase, ChevronDown, X } from 'lucide-react';
+import heroImage from '../../assets/hero.jpg';
 
 const FORMATIONS = [
   {
@@ -12,6 +13,14 @@ const FORMATIONS = [
     title: 'Concours professionnels',
   },
 ];
+
+const STATISTICS_BASE_COUNT = 115;
+const STATISTICS_BASE_DATE = new Date('2026-09-08T00:00:00');
+
+function getStatisticsTarget() {
+  const elapsedDays = Math.floor((Date.now() - STATISTICS_BASE_DATE.getTime()) / (1000 * 60 * 60 * 24));
+  return STATISTICS_BASE_COUNT + Math.max(0, Math.floor(elapsedDays / 5));
+}
 
 function FormationCard({ icon: Icon, title }) {
   const [open, setOpen] = useState(false);
@@ -88,6 +97,7 @@ export default function Home() {
     let countStartTimer;
     let statsMessageTimer;
     let joinMessageTimer;
+    const targetCount = getStatisticsTarget();
 
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return;
@@ -97,12 +107,12 @@ export default function Home() {
       countStartTimer = setTimeout(() => {
         countInterval = setInterval(() => {
           setRegisteredCount((current) => {
-            if (current >= 110) {
+            if (current >= targetCount) {
               clearInterval(countInterval);
-              return 110;
+              return targetCount;
             }
-            const nextCount = Math.min(current + 2, 110);
-            if (nextCount === 110) {
+            const nextCount = Math.min(current + 2, targetCount);
+            if (nextCount === targetCount) {
               clearInterval(countInterval);
               statsMessageTimer = setTimeout(() => setStatsMessageVisible(true), 350);
               joinMessageTimer = setTimeout(() => setJoinMessageVisible(true), 1_150);
@@ -146,7 +156,11 @@ export default function Home() {
         </div>
       )}
 
-      <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-5 py-16 md:grid-cols-2 md:px-10 md:py-24">
+      <section
+        className="relative isolate overflow-hidden bg-cover bg-center"
+        style={{ backgroundImage: `linear-gradient(rgba(247, 249, 252, 0.58), rgba(247, 249, 252, 0.58)), url(${heroImage})` }}
+      >
+        <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-5 py-16 md:grid-cols-2 md:px-10 md:py-24">
         <div>
           <span className="mb-5 inline-block rounded-full bg-blue-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide text-brand-deep">
             Préparation pour les concours directs et professionnels
@@ -173,6 +187,7 @@ export default function Home() {
             <div className="h-2 rounded-full bg-brand transition-[width] duration-75" style={{ width: `${progress}%` }} />
           </div>
           <p className="mt-2 text-xs text-white/60">Progression : {progress}%</p>
+        </div>
         </div>
       </section>
 

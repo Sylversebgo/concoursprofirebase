@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Dumbbell } from 'lucide-react';
+import { Dumbbell, Timer } from 'lucide-react';
 import * as questionsService from '../../services/questionsService';
 import * as modulesService from '../../services/modulesService';
 import { startSession } from '../../lib/quizSession';
@@ -26,7 +26,12 @@ export default function Entrainement() {
   }, [moduleId]);
 
   function handleStart() {
-    startSession({ questions, moduleId, mode: 'entrainement' });
+    startSession({ questions: questions.slice(0, 50), moduleId, mode: 'entrainement' });
+    navigate('/entrainement-questions');
+  }
+
+  function handleEvaluation() {
+    startSession({ questions: questions.slice(0, 50), moduleId, mode: 'evaluation' });
     navigate('/entrainement-questions');
   }
 
@@ -42,12 +47,17 @@ export default function Entrainement() {
       </div>
       <h1 className="mb-2 font-display text-2xl font-bold text-ink">{module.title}</h1>
       <p className="mb-8 text-gray-500">
-        {questions.length} questions vous attendent. Répondez à votre rythme, la
+        {Math.min(questions.length, 50)} questions vous attendent. Répondez à votre rythme, la
         correction s'affiche après chaque question.
       </p>
-      <Button onClick={handleStart} disabled={questions.length === 0}>
-        Commencer
-      </Button>
+      <div className="flex flex-col justify-center gap-3 sm:flex-row">
+        <Button onClick={handleStart} disabled={questions.length === 0}>
+          <Dumbbell size={16} /> Entraînement avec correction
+        </Button>
+        <Button variant="secondary" onClick={handleEvaluation} disabled={questions.length === 0}>
+          <Timer size={16} /> Tester mon niveau
+        </Button>
+      </div>
     </div>
   );
 }

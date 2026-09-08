@@ -6,7 +6,7 @@ const KEY = 'concourspro_quiz_session';
 export function startSession({ questions, moduleId, mode }) {
   const session = {
     moduleId,
-    mode, // "entrainement" | "examen" | "essai_gratuit"
+    mode, // "entrainement" | "evaluation" | "examen" | "essai_gratuit"
     questions,
     answers: {},
     current: 0,

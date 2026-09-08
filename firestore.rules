@@ -76,8 +76,8 @@ service cloud.firestore {
 
     match /exams/{id} {
       allow read: if true;
-      // Gestion des examens réservée au superadmin (l'admin n'a pas ce droit).
-      allow write: if isSuperAdmin();
+      // Les admins et superadmins peuvent publier, ouvrir et fermer les examens.
+      allow write: if isAdmin();
     }
 
     // ---------- Configuration de l'essai gratuit (10 QCM) ----------

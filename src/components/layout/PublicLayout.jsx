@@ -1,12 +1,20 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, GraduationCap, Phone, Mail, MapPin } from 'lucide-react';
+import { FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
+import { SiGmail } from 'react-icons/si';
 
 const NAV = [
   { to: '/', label: 'Accueil' },
   { to: '/a-propos', label: 'À propos de nous' },
   { to: '/tarifs', label: 'Tarifs' },
   { to: '/contact', label: 'Contact' },
+];
+
+const SOCIAL_LINKS = [
+  { label: 'Facebook', href: 'https://www.facebook.com/', icon: FaFacebookF, className: 'bg-[#1877f2] hover:bg-[#0f65d1]' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/', icon: FaLinkedinIn, className: 'bg-[#0a66c2] hover:bg-[#084f96]' },
+  { label: 'Gmail', href: 'https://mail.google.com/mail/?view=cm&fs=1&to=applearn175@gmail.com', icon: SiGmail, className: 'bg-[#ea4335] hover:bg-[#c9362a]' },
 ];
 
 export default function PublicLayout({ children }) {
@@ -143,6 +151,21 @@ export default function PublicLayout({ children }) {
               </li>
               */}
             </ul>
+            <div className="mt-5 flex items-center gap-2.5">
+              {SOCIAL_LINKS.map(({ label, href, icon: Icon, className }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Ouvrir ${label}`}
+                  title={label}
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-lg transition hover:-translate-y-1 ${className}`}
+                >
+                  <Icon size={18} aria-hidden="true" />
+                </a>
+              ))}
+            </div>
           </div>
 
         </div>
