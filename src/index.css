@@ -20,6 +20,64 @@ body {
   animation: admission-card-float 5s ease-in-out infinite;
 }
 
+.country-explorer {
+  animation: country-explorer-in 800ms ease-out both;
+  background-image: radial-gradient(circle at 90% 0%, rgba(68, 133, 255, 0.28), transparent 34%), linear-gradient(135deg, #1d2a4a, #142955);
+}
+
+.country-chip {
+  animation: country-chip-in 500ms ease-out both;
+}
+
+.country-profile {
+  animation: country-profile-in 500ms ease-out both;
+}
+
+@keyframes country-explorer-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes country-chip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes country-profile-in {
+  from {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .country-explorer,
+  .country-chip,
+  .country-profile,
+  .admission-card {
+    animation: none;
+  }
+}
+
 @keyframes admission-card-float {
   0%,
   100% {

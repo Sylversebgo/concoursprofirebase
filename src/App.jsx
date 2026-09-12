@@ -7,6 +7,8 @@ import AdminLayout from './components/layout/AdminLayout';
 
 // Pages publiques
 import Home from './pages/public/Home';
+import Pays from './pages/public/Pays';
+import International from './pages/public/International';
 import Concours from './pages/public/Concours';
 import APropos from './pages/public/APropos';
 import Tarifs from './pages/public/Tarifs';
@@ -79,6 +81,8 @@ function AppRoutes() {
     <Routes>
       {/* Public */}
       <Route path="/" element={wrap(PublicLayout, Home)} />
+      <Route path="/pays" element={wrap(PublicLayout, Pays)} />
+      <Route path="/international" element={wrap(PublicLayout, International)} />
       <Route path="/concours" element={wrap(PublicLayout, Concours)} />
       <Route path="/a-propos" element={wrap(PublicLayout, APropos)} />
       <Route path="/tarifs" element={wrap(PublicLayout, Tarifs)} />

@@ -250,6 +250,24 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <section className="mx-auto max-w-6xl px-5 pb-24 md:px-10">
+        <div className="rounded-2xl border border-blue-100 bg-blue-50 px-6 py-8 text-center md:px-10">
+          <h2 className="font-display text-3xl font-bold text-ink">Apprendre sur les pays de l’Afrique</h2>
+          <Link to="/pays" className="mt-3 inline-flex items-center font-bold text-brand transition hover:translate-x-1 hover:text-brand-deep">
+            Cliquez ici pour commencer →
+          </Link>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 pb-24 md:px-10">
+        <div className="rounded-2xl border border-amber-100 bg-[#fffaf0] px-6 py-8 text-center md:px-10">
+          <h2 className="font-display text-3xl font-bold text-ink">Apprendre sur les autres pays du monde</h2>
+          <Link to="/international" className="mt-3 inline-flex items-center font-bold text-amber-700 transition hover:translate-x-1 hover:text-amber-800">
+            Cliquez ici pour commencer →
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
