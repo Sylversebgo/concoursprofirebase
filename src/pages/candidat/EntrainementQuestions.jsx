@@ -5,6 +5,7 @@ import { getSession, saveSession } from '../../lib/quizSession';
 import { useAuth } from '../../contexts/AuthContext';
 import * as resultsService from '../../services/resultsService';
 import Button from '../../components/ui/Button';
+import MathText from '../../components/ui/MathText';
 
 export default function EntrainementQuestions() {
   const navigate = useNavigate();
@@ -138,7 +139,7 @@ export default function EntrainementQuestions() {
         />
       </div>
 
-      <h1 className="mb-6 text-xl font-bold text-ink">{question.statement}</h1>
+      <h1 className="mb-6 text-xl font-bold text-ink"><MathText>{question.statement}</MathText></h1>
 
       <div className="flex flex-col gap-3">
         {(question.options || []).map((option) => {
@@ -155,7 +156,7 @@ export default function EntrainementQuestions() {
               onClick={() => selectAnswer(option.id)}
               className={`rounded-xl border-2 px-4 py-3 text-left text-sm font-semibold transition ${style}`}
             >
-              {option.label}
+              <MathText>{option.label}</MathText>
             </button>
           );
         })}
@@ -164,7 +165,7 @@ export default function EntrainementQuestions() {
       {!isEvaluation && showCorrection && question.explanation && (
         <div className="mt-5 rounded-xl bg-blue-50 p-4 text-sm text-brand-deep">
           <p className="mb-1 font-bold">Explication</p>
-          {question.explanation}
+          <MathText>{question.explanation}</MathText>
         </div>
       )}
 

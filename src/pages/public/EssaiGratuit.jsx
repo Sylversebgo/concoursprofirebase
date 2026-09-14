@@ -4,6 +4,7 @@ import { MessageCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 import * as freeTrialService from '../../services/freeTrialService';
 import Spinner from '../../components/ui/Spinner';
 import Button from '../../components/ui/Button';
+import MathText from '../../components/ui/MathText';
 
 const WHATSAPP_NUMBER = '57861564';
 
@@ -95,7 +96,7 @@ export default function EssaiGratuit() {
         <div className="h-2 rounded-full bg-brand transition-all" style={{ width: `${((current + 1) / questions.length) * 100}%` }} />
       </div>
 
-      <h1 className="mb-6 text-xl font-bold text-ink">{q.statement}</h1>
+      <h1 className="mb-6 text-xl font-bold text-ink"><MathText>{q.statement}</MathText></h1>
 
       <div className="flex flex-col gap-3">
         {(q.options || []).map((opt) => {
@@ -112,7 +113,7 @@ export default function EssaiGratuit() {
               onClick={() => selectAnswer(opt.id)}
               className={`rounded-xl border-2 px-4 py-3 text-left text-sm font-semibold transition ${style}`}
             >
-              {opt.label}
+              <MathText>{opt.label}</MathText>
             </button>
           );
         })}
@@ -121,13 +122,17 @@ export default function EssaiGratuit() {
       {showCorrection && q.explanation && (
         <div className="mt-5 rounded-xl bg-blue-50 p-4 text-sm text-brand-deep">
           <p className="mb-1 font-bold">Explication</p>
-          {q.explanation}
+          <MathText>{q.explanation}</MathText>
         </div>
       )}
 
       <Button onClick={handleNext} disabled={!selected} className="mt-8 w-full">
         {!showCorrection ? 'Valider ma réponse' : current < questions.length - 1 ? 'Question suivante' : 'Voir mon résultat'}
       </Button>
+
+      <Link to="/psycho" className="mt-6 block text-center text-sm font-bold text-brand hover:underline">
+        Commencer un test psychotechnique →
+      </Link>
     </div>
   );
 }

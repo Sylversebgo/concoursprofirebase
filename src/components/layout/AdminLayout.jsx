@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Users, HelpCircle, Upload, BookOpen, ClipboardList,
-  FileCheck, LineChart, FolderOpen, ShieldCheck, MessageSquare, Bell, Sparkles,
+  FileCheck, LineChart, FolderOpen, ShieldCheck, MessageSquare, Bell, Sparkles, Brain,
 } from 'lucide-react';
 import DashboardLayout from './DashboardLayout';
 import { useAuth } from '../../contexts/AuthContext';
@@ -22,6 +22,7 @@ const BASE_ITEMS = [
 // La gestion des examens est accessible aux admins et superadmins.
 const SUPERADMIN_ITEMS = [
   { to: '/essai-gratuit-admin', label: 'Essai gratuit', icon: Sparkles },
+  { to: '/gestion-psycho', label: 'Test psychotechnique', icon: Brain },
   { to: '/gestion-admins', label: 'Gestion admins', icon: ShieldCheck },
 ];
 

@@ -22,6 +22,8 @@ export default function GestionQuestions() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
+  const [actionError, setActionError] = useState('');
 
   useEffect(() => {
     // Temps réel : les questions apparaissent/disparaissent/se mettent à
@@ -34,22 +36,27 @@ export default function GestionQuestions() {
   function openCreate() {
     setEditing(null);
     setForm(EMPTY_FORM);
+    setActionError('');
     setModalOpen(true);
   }
 
   function openEdit(q) {
     setEditing(q);
     setForm({ ...EMPTY_FORM, ...q });
+    setActionError('');
     setModalOpen(true);
   }
 
   async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
+    setActionError('');
     try {
       if (editing) await questionsService.update(editing.id, form);
       else await questionsService.create(form);
       setModalOpen(false);
+    } catch (error) {
+      setActionError(error.message || 'Impossible d’enregistrer la question.');
     } finally {
       setSaving(false);
     }
@@ -57,7 +64,15 @@ export default function GestionQuestions() {
 
   async function handleDelete(q) {
     if (!confirm(`Supprimer la question "${q.statement.slice(0, 40)}..." ?`)) return;
-    await questionsService.remove(q.id);
+    setDeletingId(q.id);
+    setActionError('');
+    try {
+      await questionsService.remove(q.id);
+    } catch (error) {
+      setActionError(error.message || 'Impossible de supprimer la question.');
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   function updateOption(index, label) {
@@ -72,6 +87,12 @@ export default function GestionQuestions() {
         <h1 className="font-display text-2xl font-bold text-ink">Gestion des questions</h1>
         <Button onClick={openCreate}><Plus size={16} /> Nouvelle question</Button>
       </div>
+
+      {actionError && (
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700" role="alert">
+          {actionError}
+        </div>
+      )}
 
       {questions === null ? (
         <div className="flex justify-center py-16"><Spinner /></div>
@@ -89,8 +110,25 @@ export default function GestionQuestions() {
                 </div>
               </div>
               <div className="flex shrink-0 gap-2">
-                <button onClick={() => openEdit(q)} className="rounded-lg p-2 text-gray-400 hover:bg-black/5 hover:text-brand"><Pencil size={16} /></button>
-                <button onClick={() => handleDelete(q)} className="rounded-lg p-2 text-gray-400 hover:bg-red-50 hover:text-red-600"><Trash2 size={16} /></button>
+                <button
+                  type="button"
+                  onClick={() => openEdit(q)}
+                  className="rounded-lg p-2 text-gray-400 hover:bg-black/5 hover:text-brand"
+                  aria-label={`Modifier la question : ${q.statement}`}
+                  title="Modifier la question"
+                >
+                  <Pencil size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(q)}
+                  disabled={deletingId === q.id}
+                  className="rounded-lg p-2 text-gray-400 hover:bg-red-50 hover:text-red-600 disabled:cursor-wait disabled:opacity-50"
+                  aria-label={`Supprimer la question : ${q.statement}`}
+                  title="Supprimer la question"
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
             </div>
           ))}

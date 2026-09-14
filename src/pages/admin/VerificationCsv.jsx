@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, AlertTriangle } from 'lucide-react';
 import * as questionsService from '../../services/questionsService';
 import Button from '../../components/ui/Button';
-import Badge from '../../components/ui/Badge';
 
 const CSV_DRAFT_KEY = 'concourspro_csv_draft';
 
@@ -24,8 +23,16 @@ export default function VerificationCsv() {
 
   if (!rows) return null;
 
-  const invalidRows = rows.filter((r) => !r.moduleId || !r.statement || r.options.some((o) => !o.label));
-  const validRows = rows.filter((r) => r.moduleId && r.statement && r.options.every((o) => o.label));
+  function getInvalidReason(row) {
+    if (!row.moduleId) return 'moduleId manquant';
+    if (!row.statement) return 'énoncé manquant';
+    if (row.options.some((option) => !option.label)) return 'une ou plusieurs options sont manquantes';
+    if (!['a', 'b', 'c', 'd'].includes(row.correctAnswer)) return 'correctAnswer doit être a, b, c ou d';
+    return '';
+  }
+
+  const invalidRows = rows.filter((row) => getInvalidReason(row));
+  const validRows = rows.filter((row) => !getInvalidReason(row));
 
   async function handleConfirm() {
     setImporting(true);
@@ -58,13 +65,15 @@ export default function VerificationCsv() {
 
       <div className="mb-6 flex flex-col gap-2">
         {rows.slice(0, 20).map((r, i) => {
-          const invalid = !r.moduleId || !r.statement || r.options.some((o) => !o.label);
+          const invalidReason = getInvalidReason(r);
+          const invalid = Boolean(invalidReason);
           return (
             <div key={i} className={`flex items-start gap-3 rounded-xl border p-3 text-sm ${invalid ? 'border-red-200 bg-red-50' : 'border-black/5 bg-white'}`}>
               {invalid ? <AlertTriangle size={16} className="mt-0.5 shrink-0 text-red-500" /> : <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-green-500" />}
               <div className="min-w-0">
                 <p className="truncate font-semibold text-ink">{r.statement || '(énoncé manquant)'}</p>
                 <p className="text-xs text-gray-400">Module : {r.moduleId || '—'}</p>
+                {invalid && <p className="mt-1 text-xs font-semibold text-red-600">Erreur : {invalidReason}</p>}
               </div>
             </div>
           );

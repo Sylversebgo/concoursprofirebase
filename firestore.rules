@@ -69,6 +69,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /psychoQuestions/{id} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
     match /contests/{id} {
       allow read: if true;
       allow write: if isAdmin();

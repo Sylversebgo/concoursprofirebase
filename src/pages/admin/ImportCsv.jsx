@@ -1,10 +1,25 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Papa from 'papaparse';
-import { Upload, FileText } from 'lucide-react';
-import Button from '../../components/ui/Button';
+import { Upload } from 'lucide-react';
 
 const CSV_DRAFT_KEY = 'concourspro_csv_draft';
+
+function normalizeHeader(header) {
+  return header
+    .replace(/^\uFEFF/, '')
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]/g, '');
+}
+
+function getField(row, ...names) {
+  for (const name of names) {
+    const value = row[normalizeHeader(name)];
+    if (value !== undefined && value !== null && String(value).trim() !== '') return String(value).trim();
+  }
+  return '';
+}
 
 export default function ImportCsv() {
   const navigate = useNavigate();
@@ -21,20 +36,24 @@ export default function ImportCsv() {
       header: true,
       skipEmptyLines: true,
       complete: (results) => {
-        const rows = results.data.map((row) => ({
-          moduleId: row.moduleId?.trim(),
-          statement: row.statement?.trim(),
+        const rows = results.data.map((rawRow) => {
+          const row = Object.fromEntries(Object.entries(rawRow).map(([key, value]) => [normalizeHeader(key), value]));
+          const answer = getField(row, 'correctAnswer', 'correct_answer', 'bonneReponse', 'reponseCorrecte').toLowerCase();
+          return {
+          moduleId: getField(row, 'moduleId', 'module', 'idModule'),
+          statement: getField(row, 'statement', 'question', 'enonce'),
           options: [
-            { id: 'a', label: row.optionA?.trim() || '' },
-            { id: 'b', label: row.optionB?.trim() || '' },
-            { id: 'c', label: row.optionC?.trim() || '' },
-            { id: 'd', label: row.optionD?.trim() || '' },
+            { id: 'a', label: getField(row, 'optionA', 'option1', 'reponseA', 'a') },
+            { id: 'b', label: getField(row, 'optionB', 'option2', 'reponseB', 'b') },
+            { id: 'c', label: getField(row, 'optionC', 'option3', 'reponseC', 'c') },
+            { id: 'd', label: getField(row, 'optionD', 'option4', 'reponseD', 'd') },
           ],
-          correctAnswer: row.correctAnswer?.trim().toLowerCase() || 'a',
-          explanation: row.explanation?.trim() || '',
-          difficulty: row.difficulty?.trim() || 'moyen',
+          correctAnswer: answer || 'a',
+          explanation: getField(row, 'explanation', 'explication'),
+          difficulty: getField(row, 'difficulty', 'difficulte') || 'moyen',
           active: true,
-        }));
+          };
+        });
 
         if (rows.length === 0) {
           setError('Le fichier ne contient aucune ligne exploitable.');

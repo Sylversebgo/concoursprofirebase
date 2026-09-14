@@ -17,6 +17,7 @@ import Connexion from './pages/public/Connexion';
 import ConnexionAdmin from './pages/public/ConnexionAdmin';
 import Inscription from './pages/public/Inscription';
 import EssaiGratuit from './pages/public/EssaiGratuit';
+import Psycho from './pages/public/Psycho';
 import Contact from './pages/public/Contact';
 import ContactWhatsApp from './pages/public/ContactWhatsApp';
 import MentionsLegales from './pages/public/MentionsLegales';
@@ -57,6 +58,7 @@ import GestionDocuments from './pages/admin/GestionDocuments';
 import StatistiquesAdmin from './pages/admin/StatistiquesAdmin';
 import GestionAdmins from './pages/admin/GestionAdmins';
 import GestionEssaiGratuit from './pages/admin/GestionEssaiGratuit';
+import GestionPsycho from './pages/admin/GestionPsycho';
 
 function wrap(Layout, Page) {
   return (
@@ -91,6 +93,7 @@ function AppRoutes() {
       <Route path="/connexion-admin" element={wrap(PublicLayout, ConnexionAdmin)} />
       <Route path="/inscription" element={wrap(PublicLayout, Inscription)} />
       <Route path="/essai-gratuit" element={wrap(PublicLayout, EssaiGratuit)} />
+      <Route path="/psycho" element={wrap(PublicLayout, Psycho)} />
       {/* Ancienne URL conservée en redirection, au cas où des liens externes existent déjà */}
       <Route path="/tester-gratuitement" element={<Navigate to="/essai-gratuit" replace />} />
       <Route path="/contact" element={wrap(PublicLayout, Contact)} />
@@ -122,6 +125,7 @@ function AppRoutes() {
       <Route path="/gestion-modules" element={protect(['admin', 'superadmin'], AdminLayout, GestionModules)} />
       <Route path="/gestion-examens" element={protect(['admin', 'superadmin'], AdminLayout, GestionExamens)} />
       <Route path="/essai-gratuit-admin" element={protect(['superadmin'], AdminLayout, GestionEssaiGratuit)} />
+      <Route path="/gestion-psycho" element={protect(['superadmin'], AdminLayout, GestionPsycho)} />
       <Route path="/copies-examens" element={protect(['admin', 'superadmin'], AdminLayout, CopiesExamens)} />
       <Route path="/correction-copie/:id" element={protect(['admin', 'superadmin'], AdminLayout, CorrectionCopie)} />
       <Route path="/suivi-candidats" element={protect(['admin', 'superadmin'], AdminLayout, SuiviCandidats)} />
