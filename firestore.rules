@@ -106,6 +106,18 @@ service cloud.firestore {
       allow create: if isSignedIn() && request.resource.data.candidateId == request.auth.uid;
     }
 
+    // ---------- Sujets et rédactions ----------
+    match /writingSubjects/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /writingSubmissions/{id} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.candidateId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.candidateId == request.auth.uid;
+      allow update: if isAdmin() || (isSignedIn() && resource.data.candidateId == request.auth.uid);
+    }
+
     // ---------- Documents ----------
     match /documents/{id} {
       allow read: if resource.data.published == true || isAdmin();

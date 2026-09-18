@@ -12,13 +12,13 @@ export default function CorrectionCopie() {
   const navigate = useNavigate();
   const [submission, setSubmission] = useState(null);
   const [questions, setQuestions] = useState([]);
-  const [adjustedScore, setAdjustedScore] = useState(0);
+  const [adjustedNote, setAdjustedNote] = useState(0);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     submissionsService.getById(id).then(async (s) => {
       setSubmission(s);
-      setAdjustedScore(s.score);
+      setAdjustedNote(s.scoreMax === 50 ? s.score : Math.round((s.score / (s.questionIds?.length || 1)) * 50));
       const qs = await Promise.all(s.questionIds.map((qId) => questionsService.getById(qId)));
       setQuestions(qs.filter(Boolean));
     });
@@ -29,8 +29,8 @@ export default function CorrectionCopie() {
     try {
       await submissionsService.update(id, {
         status: 'corrige',
-        score: adjustedScore,
-        percentage: Math.round((adjustedScore / questions.length) * 100),
+        score: adjustedNote,
+        scoreMax: 50,
       });
       navigate('/copies-examens');
     } finally {
@@ -43,7 +43,7 @@ export default function CorrectionCopie() {
   return (
     <div className="mx-auto max-w-2xl">
       <h1 className="mb-1 font-display text-2xl font-bold text-ink">Correction de copie</h1>
-      <p className="mb-6 text-gray-500">Score initial calculé automatiquement : {submission.percentage}%</p>
+      <p className="mb-6 text-gray-500">Note initiale calculée automatiquement : {submission.scoreMax === 50 ? submission.score : Math.round((submission.score / (submission.questionIds?.length || 1)) * 50)}/50</p>
 
       <div className="mb-6 flex flex-col gap-2">
         {questions.map((q) => {
@@ -59,12 +59,12 @@ export default function CorrectionCopie() {
 
       <div className="mb-6 max-w-xs">
         <Input
-          label={`Score ajusté (sur ${questions.length})`}
+          label="Note ajustée (sur 50)"
           type="number"
           min={0}
-          max={questions.length}
-          value={adjustedScore}
-          onChange={(e) => setAdjustedScore(Number(e.target.value))}
+          max={50}
+          value={adjustedNote}
+          onChange={(e) => setAdjustedNote(Number(e.target.value))}
         />
       </div>
 

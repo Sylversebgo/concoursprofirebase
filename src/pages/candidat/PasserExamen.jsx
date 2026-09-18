@@ -56,7 +56,7 @@ export default function PasserExamen() {
     if (submitting) return;
     setSubmitting(true);
     const correctCount = questions.filter((q) => answers[q.id] === q.correctAnswer).length;
-    const percentage = Math.round((correctCount / questions.length) * 100);
+    const note = Math.round((correctCount / questions.length) * 50);
 
     await submissionsService.create({
       examId: id,
@@ -65,8 +65,8 @@ export default function PasserExamen() {
       answers,
       startedAt: startedAtRef.current,
       timeSpentSeconds: Math.round((Date.now() - startedAtRef.current) / 1000),
-      score: correctCount,
-      percentage,
+      score: note,
+      scoreMax: 50,
       status: 'soumis',
     });
 

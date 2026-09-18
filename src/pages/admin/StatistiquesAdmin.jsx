@@ -37,7 +37,7 @@ export default function StatistiquesAdmin() {
       <h1 className="mb-6 font-display text-2xl font-bold text-ink">Statistiques</h1>
 
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card><p className="text-xs font-bold uppercase text-gray-400">Score moyen global</p><p className="mt-2 text-3xl font-bold text-brand">{data.globalAvg}%</p></Card>
+        <Card><p className="text-xs font-bold uppercase text-gray-400">Note moyenne globale</p><p className="mt-2 text-3xl font-bold text-brand">{data.globalAvg}/50</p></Card>
         <Card><p className="text-xs font-bold uppercase text-gray-400">Sessions totales</p><p className="mt-2 text-3xl font-bold text-ink">{data.totalSessions}</p></Card>
         <Card><p className="text-xs font-bold uppercase text-gray-400">Candidats actifs</p><p className="mt-2 text-3xl font-bold text-ink">{data.totalCandidats}</p></Card>
       </div>
@@ -48,7 +48,7 @@ export default function StatistiquesAdmin() {
           <BarChart data={data.byModule}>
             <CartesianGrid strokeDasharray="3 3" stroke="#eef1f7" />
             <XAxis dataKey="module" stroke="#9aa5bd" fontSize={12} />
-            <YAxis stroke="#9aa5bd" fontSize={12} domain={[0, 100]} />
+            <YAxis stroke="#9aa5bd" fontSize={12} domain={[0, 50]} />
             <Tooltip />
             <Bar dataKey="score" fill="#1f5fe8" radius={[6, 6, 0, 0]} />
           </BarChart>

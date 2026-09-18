@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Users, HelpCircle, Upload, BookOpen, ClipboardList,
-  FileCheck, LineChart, FolderOpen, ShieldCheck, MessageSquare, Bell, Sparkles, Brain,
+  FileCheck, LineChart, FolderOpen, ShieldCheck, MessageSquare, Bell, Sparkles, Brain, FilePenLine,
 } from 'lucide-react';
 import DashboardLayout from './DashboardLayout';
 import { useAuth } from '../../contexts/AuthContext';
@@ -12,6 +12,7 @@ const BASE_ITEMS = [
   { to: '/import-csv', label: 'Import CSV', icon: Upload },
   { to: '/gestion-modules', label: 'Modules', icon: BookOpen },
   { to: '/copies-examens', label: 'Copies à corriger', icon: FileCheck },
+  { to: '/gestion-redactions', label: 'Rédactions', icon: FilePenLine },
   { to: '/suivi-candidats', label: 'Suivi candidats', icon: LineChart },
   { to: '/gestion-documents', label: 'Documents', icon: FolderOpen },
   { to: '/statistiques-admin', label: 'Statistiques', icon: LineChart },

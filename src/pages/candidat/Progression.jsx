@@ -31,8 +31,8 @@ export default function Progression() {
       <h1 className="mb-6 font-display text-2xl font-bold text-ink">Ma progression</h1>
 
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card><p className="text-xs font-bold uppercase text-gray-400">Score moyen</p><p className="mt-2 text-3xl font-bold text-brand">{avg}%</p></Card>
-        <Card><p className="text-xs font-bold uppercase text-gray-400">Meilleur score</p><p className="mt-2 text-3xl font-bold text-green-600">{best}%</p></Card>
+        <Card><p className="text-xs font-bold uppercase text-gray-400">Note moyenne</p><p className="mt-2 text-3xl font-bold text-brand">{avg}/50</p></Card>
+        <Card><p className="text-xs font-bold uppercase text-gray-400">Meilleure note</p><p className="mt-2 text-3xl font-bold text-green-600">{best}/50</p></Card>
         <Card><p className="text-xs font-bold uppercase text-gray-400">Sessions</p><p className="mt-2 text-3xl font-bold text-ink">{results.length}</p></Card>
       </div>
 
@@ -42,7 +42,7 @@ export default function Progression() {
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#eef1f7" />
             <XAxis dataKey="session" stroke="#9aa5bd" fontSize={12} />
-            <YAxis stroke="#9aa5bd" fontSize={12} domain={[0, 100]} />
+            <YAxis stroke="#9aa5bd" fontSize={12} domain={[0, 50]} />
             <Tooltip />
             <Line type="monotone" dataKey="score" stroke="#1f5fe8" strokeWidth={3} dot={{ r: 4 }} />
           </LineChart>

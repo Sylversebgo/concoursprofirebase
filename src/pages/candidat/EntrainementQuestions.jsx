@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock } from 'lucide-react';
+import { Clock, Search } from 'lucide-react';
 import { getSession, saveSession } from '../../lib/quizSession';
 import { useAuth } from '../../contexts/AuthContext';
 import * as resultsService from '../../services/resultsService';
@@ -14,6 +14,7 @@ export default function EntrainementQuestions() {
   const [showCorrection, setShowCorrection] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(30);
+  const [questionSearch, setQuestionSearch] = useState('');
   const advanceTimerRef = useRef(null);
 
   useEffect(() => {
@@ -31,9 +32,7 @@ export default function EntrainementQuestions() {
     const correctCount = finalSession.questions.filter(
       (question) => finalSession.answers[question.id] === question.correctAnswer
     ).length;
-    const score = isEvaluation
-      ? Math.round((correctCount / finalSession.questions.length) * 200) / 10
-      : Math.round((correctCount / finalSession.questions.length) * 100);
+    const score = Math.round((correctCount / finalSession.questions.length) * 50);
 
     setSubmitting(true);
     resultsService.create({
@@ -43,6 +42,7 @@ export default function EntrainementQuestions() {
       score,
       correctAnswers: correctCount,
       totalQuestions: finalSession.questions.length,
+      scoreMax: 50,
       answers: finalSession.answers,
       durationSeconds: Math.round((Date.now() - finalSession.startedAt) / 1000),
     }).then((resultId) => {
@@ -88,6 +88,23 @@ export default function EntrainementQuestions() {
 
   const question = session.questions[session.current];
   const selected = session.answers[question.id];
+  const normalizedSearch = questionSearch.trim().toLowerCase();
+  const matchingQuestions = normalizedSearch
+    ? session.questions
+      .map((candidate, index) => ({ candidate, index }))
+      .filter(({ candidate, index }) => (
+        String(index + 1).includes(normalizedSearch)
+        || String(candidate.statement || '').toLowerCase().includes(normalizedSearch)
+      ))
+    : [];
+
+  function goToQuestion(index) {
+    const nextSession = { ...session, current: index };
+    setSession(nextSession);
+    saveSession(nextSession);
+    setShowCorrection(false);
+    setQuestionSearch('');
+  }
 
   function selectAnswer(optionId) {
     if (showCorrection || submitting) return;
@@ -132,6 +149,36 @@ export default function EntrainementQuestions() {
         )}
       </div>
 
+      {!isEvaluation && (
+        <div className="relative mb-4">
+          <Search size={17} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            value={questionSearch}
+            onChange={(event) => setQuestionSearch(event.target.value)}
+            placeholder="Rechercher par numéro ou dans l'énoncé"
+            aria-label="Rechercher une question"
+            className="w-full rounded-xl border border-black/10 bg-white py-3 pl-10 pr-4 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/10"
+          />
+          {normalizedSearch && (
+            <div className="absolute z-10 mt-2 max-h-56 w-full overflow-y-auto rounded-xl border border-black/10 bg-white p-1 shadow-lg">
+              {matchingQuestions.length > 0 ? matchingQuestions.map(({ candidate, index }) => (
+                <button
+                  key={candidate.id}
+                  type="button"
+                  onClick={() => goToQuestion(index)}
+                  className={`block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-blue-50 ${index === session.current ? 'bg-blue-50 text-brand' : 'text-ink'}`}
+                >
+                  <span className="mr-2 font-bold">{index + 1}.</span>
+                  <MathText>{candidate.statement}</MathText>
+                </button>
+              )) : (
+                <p className="px-3 py-2 text-sm text-gray-500">Aucune question trouvée.</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="mb-6 h-2 w-full rounded-full bg-gray-200">
         <div
           className="h-2 rounded-full bg-brand transition-all"
@@ -170,15 +217,36 @@ export default function EntrainementQuestions() {
       )}
 
       {!isEvaluation && (
-        <Button onClick={handleNext} disabled={!selected || submitting} className="mt-8 w-full">
-          {submitting
-            ? 'Calcul du résultat…'
-            : !showCorrection
-              ? 'Valider ma réponse'
-              : session.current < session.questions.length - 1
-                ? 'Question suivante'
-                : 'Voir mon résultat'}
-        </Button>
+        <>
+          <div className="mt-8 flex gap-3">
+            <Button
+              variant="secondary"
+              onClick={() => goToQuestion(session.current - 1)}
+              disabled={session.current === 0 || submitting}
+              className="flex-1"
+            >
+              Question précédente
+            </Button>
+            <Button onClick={handleNext} disabled={!selected || submitting} className="flex-1">
+              {submitting
+                ? 'Calcul du résultat…'
+                : !showCorrection
+                  ? 'Valider ma réponse'
+                  : session.current < session.questions.length - 1
+                    ? 'Question suivante'
+                    : 'Voir mon résultat'}
+            </Button>
+          </div>
+          {showCorrection && session.current < session.questions.length - 1 && (
+            <button
+              type="button"
+              onClick={() => goToQuestion(session.current + 1)}
+              className="mt-3 w-full text-sm font-semibold text-brand hover:underline"
+            >
+              Question suivante
+            </button>
+          )}
+        </>
       )}
     </div>
   );

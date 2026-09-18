@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, BookOpen, Dumbbell, ClipboardList, TrendingUp,
-  FileText, Bell, User,
+  FileText, Bell, User, FilePenLine,
 } from 'lucide-react';
 import DashboardLayout from './DashboardLayout';
 
@@ -11,6 +11,7 @@ const ITEMS = [
   { to: '/examens', label: 'Examens', icon: ClipboardList },
   { to: '/progression', label: 'Progression', icon: TrendingUp },
   { to: '/documents', label: 'Documents', icon: FileText },
+  { to: '/redactions', label: 'Rédactions', icon: FilePenLine },
   { to: '/notifications', label: 'Notifications', icon: Bell },
   { to: '/profil', label: 'Mon profil', icon: User },
 ];

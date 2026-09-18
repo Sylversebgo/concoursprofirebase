@@ -30,8 +30,8 @@ export default function DashboardCandidat() {
 
       <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
         <Card>
-          <p className="text-xs font-bold uppercase text-gray-400">Score moyen</p>
-          <p className="mt-2 text-3xl font-bold text-brand">{avgScore}%</p>
+          <p className="text-xs font-bold uppercase text-gray-400">Note moyenne</p>
+          <p className="mt-2 text-3xl font-bold text-brand">{avgScore}/50</p>
         </Card>
         <Card>
           <p className="text-xs font-bold uppercase text-gray-400">Sessions réalisées</p>

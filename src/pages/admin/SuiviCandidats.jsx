@@ -34,7 +34,7 @@ export default function SuiviCandidats() {
               <tr>
                 <th className="px-4 py-3">Candidat</th>
                 <th className="px-4 py-3">Sessions réalisées</th>
-                <th className="px-4 py-3">Score moyen</th>
+                <th className="px-4 py-3">Note moyenne / 50</th>
               </tr>
             </thead>
             <tbody>
@@ -42,7 +42,7 @@ export default function SuiviCandidats() {
                 <tr key={r.id} className="border-t border-black/5">
                   <td className="px-4 py-3 font-semibold text-ink">{r.firstName} {r.lastName}</td>
                   <td className="px-4 py-3 text-gray-500">{r.sessionCount}</td>
-                  <td className="px-4 py-3 font-bold text-brand">{r.avgScore !== null ? `${r.avgScore}%` : '—'}</td>
+                  <td className="px-4 py-3 font-bold text-brand">{r.avgScore !== null ? `${r.avgScore}/50` : '—'}</td>
                 </tr>
               ))}
             </tbody>

@@ -38,6 +38,7 @@ import Resultat from './pages/candidat/Resultat';
 import Progression from './pages/candidat/Progression';
 import DocumentsCandidat from './pages/candidat/DocumentsCandidat';
 import Profil from './pages/candidat/Profil';
+import Redactions from './pages/candidat/Redactions';
 
 // Page partagée
 import Messagerie from './pages/shared/Messagerie';
@@ -59,6 +60,7 @@ import StatistiquesAdmin from './pages/admin/StatistiquesAdmin';
 import GestionAdmins from './pages/admin/GestionAdmins';
 import GestionEssaiGratuit from './pages/admin/GestionEssaiGratuit';
 import GestionPsycho from './pages/admin/GestionPsycho';
+import GestionRedactions from './pages/admin/GestionRedactions';
 
 function wrap(Layout, Page) {
   return (
@@ -115,6 +117,7 @@ function AppRoutes() {
       <Route path="/progression" element={protect(['candidat'], CandidatLayout, Progression)} />
       <Route path="/documents" element={protect(['candidat'], CandidatLayout, DocumentsCandidat)} />
       <Route path="/profil" element={protect(['candidat'], CandidatLayout, Profil)} />
+      <Route path="/redactions" element={protect(['candidat'], CandidatLayout, Redactions)} />
 
       {/* Admin / Superadmin */}
       <Route path="/dashboard" element={protect(['admin', 'superadmin'], AdminLayout, Dashboard)} />
@@ -132,6 +135,7 @@ function AppRoutes() {
       <Route path="/gestion-documents" element={protect(['admin', 'superadmin'], AdminLayout, GestionDocuments)} />
       <Route path="/statistiques-admin" element={protect(['admin', 'superadmin'], AdminLayout, StatistiquesAdmin)} />
       <Route path="/gestion-admins" element={protect(['superadmin'], AdminLayout, GestionAdmins)} />
+      <Route path="/gestion-redactions" element={protect(['admin', 'superadmin'], AdminLayout, GestionRedactions)} />
 
       {/* Messagerie et Notifications : partagées candidat / admin, layout choisi selon le rôle */}
       <Route path="/messagerie" element={<MessagerieRouter />} />

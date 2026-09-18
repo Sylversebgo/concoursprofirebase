@@ -40,7 +40,7 @@ export default function CopiesExamens() {
               <tr>
                 <th className="px-4 py-3">Candidat</th>
                 <th className="px-4 py-3">Examen</th>
-                <th className="px-4 py-3">Score</th>
+                <th className="px-4 py-3">Note / 50</th>
                 <th className="px-4 py-3">Statut</th>
                 <th className="px-4 py-3" />
               </tr>
@@ -50,7 +50,7 @@ export default function CopiesExamens() {
                 <tr key={r.id} className="border-t border-black/5">
                   <td className="px-4 py-3 font-semibold text-ink">{r.candidat ? `${r.candidat.firstName} ${r.candidat.lastName}` : '—'}</td>
                   <td className="px-4 py-3 text-gray-500">{r.exam?.title || '—'}</td>
-                  <td className="px-4 py-3 font-bold text-brand">{r.percentage}%</td>
+                  <td className="px-4 py-3 font-bold text-brand">{r.scoreMax === 50 ? r.score : Math.round((r.score / (r.questionIds?.length || 1)) * 50)}/50</td>
                   <td className="px-4 py-3"><Badge tone={r.status === 'corrige' ? 'green' : 'gold'}>{r.status}</Badge></td>
                   <td className="px-4 py-3 text-right">
                     <Link to={`/correction-copie/${r.id}`} className="text-xs font-bold text-brand">Corriger →</Link>
