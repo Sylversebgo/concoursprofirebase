@@ -4,6 +4,11 @@ import katex from 'katex';
 function repairLatex(value) {
   return value
     .replace(/\\{2,}(?=(?:frac|sqrt|ln|sin|cos|tan|exp|neq|implies)\b)/g, '\\')
+    .replace(/\\dfrac\b/g, '\\frac')
+    .replace(/\\(?:le|leq)\b/g, '\\leq')
+    .replace(/\\(?:ge|geq)\b/g, '\\geq')
+    .replace(/\u2260/g, '\\neq')
+    .replace(/\u00d7/g, '\\times')
     .replace(/\\rac(?=\s*\{)/g, '\\frac')
     .replace(/\brac(?=\s*\{)/g, '\\frac')
     .replace(/\beq(?=\s*[-+0-9a-zA-Z])/g, '\\neq')
