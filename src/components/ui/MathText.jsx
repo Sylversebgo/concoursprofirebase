@@ -3,6 +3,7 @@ import katex from 'katex';
 
 function repairLatex(value) {
   return value
+    .replace(/\\{2,}(?=(?:frac|sqrt|ln|sin|cos|tan|exp|neq|implies)\b)/g, '\\')
     .replace(/\\rac(?=\s*\{)/g, '\\frac')
     .replace(/\brac(?=\s*\{)/g, '\\frac')
     .replace(/\beq(?=\s*[-+0-9a-zA-Z])/g, '\\neq')
@@ -14,6 +15,7 @@ function wrapPlainFormula(value) {
   let text = repairLatex(value);
   text = text.replace(/(\\frac\s*\{[^{}]*\}\s*\{[^{}]*\})/g, '$$$1$$');
   text = text.replace(/(\\(?:sqrt|ln|sin|cos|tan|exp)\s*(?:\{[^{}]*\}|\([^)]*\)|[A-Za-z]))/g, '$$$1$$');
+  text = text.replace(/(\\(?:neq|implies)\s*[A-Za-z0-9+-]+)/g, '$$$1$$');
   text = text.replace(/([A-Za-z0-9)]\s*\^\s*(?:\{[^{}]*\}|[A-Za-z0-9+-]+))/g, '$$$1$$');
   text = text.replace(/([A-Za-z]\s*\\neq\s*[A-Za-z0-9+-]+)/g, '$$$1$$');
   return text;

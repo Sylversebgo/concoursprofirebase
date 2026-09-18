@@ -7,6 +7,7 @@ import * as submissionsService from '../../services/submissionsService';
 import { useAuth } from '../../contexts/AuthContext';
 import Spinner from '../../components/ui/Spinner';
 import Button from '../../components/ui/Button';
+import MathText from '../../components/ui/MathText';
 
 export default function PasserExamen() {
   const { id } = useParams();
