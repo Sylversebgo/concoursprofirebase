@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpenText, ClipboardCheck, BarChart3, Landmark, Briefcase, ChevronDown, X } from 'lucide-react';
 import heroImage from '../../assets/hero.jpg';
+import maleStudentImage from '../../assets/A Male student.jpg';
+import marketingBoostImage from '../../assets/Marketing Boost.jpg';
+
+const HERO_SLIDES = [heroImage, maleStudentImage, marketingBoostImage];
 
 const FORMATIONS = [
   {
@@ -70,11 +74,21 @@ export default function Home() {
   const [registeredCount, setRegisteredCount] = useState(0);
   const [statsMessageVisible, setStatsMessageVisible] = useState(false);
   const [joinMessageVisible, setJoinMessageVisible] = useState(false);
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
   const statsSectionRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setToastVisible(false), 6000);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const interval = setInterval(() => {
+      setActiveHeroSlide((current) => (current + 1) % HERO_SLIDES.length);
+    }, 5500);
+
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -158,9 +172,30 @@ export default function Home() {
 
       <section
         className="relative isolate overflow-hidden bg-cover bg-center"
-        style={{ backgroundImage: `linear-gradient(rgba(247, 249, 252, 0.58), rgba(247, 249, 252, 0.58)), url(${heroImage})` }}
+        aria-label="Présentation de ConcoursPro"
       >
-        <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-5 py-16 md:grid-cols-2 md:px-10 md:py-24">
+        <div className="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+          {HERO_SLIDES.map((image, index) => {
+            const position = (index - activeHeroSlide + HERO_SLIDES.length) % HERO_SLIDES.length;
+            const offset = position === 0 ? 0 : position === HERO_SLIDES.length - 1 ? -100 : 100;
+
+            return (
+              <div
+                key={image}
+                className={`absolute inset-0 overflow-hidden transition-[transform,opacity] duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${index === activeHeroSlide ? 'opacity-100' : 'opacity-0'}`}
+                style={{ transform: `translateX(${offset}%)` }}
+              >
+                <img
+                  src={image}
+                  alt=""
+                  className={`h-full w-full object-cover ${index === activeHeroSlide ? 'hero-image-drift' : ''}`}
+                />
+              </div>
+            );
+          })}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(247,249,252,0.58),rgba(247,249,252,0.58))]" />
+        </div>
+        <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-5 py-16 md:grid-cols-2 md:px-10 md:py-24">
         <div>
           <span className="mb-5 inline-block rounded-full bg-blue-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide text-brand-deep">
             Préparation pour les concours directs et professionnels

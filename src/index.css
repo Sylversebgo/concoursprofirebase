@@ -20,6 +20,20 @@ body {
   animation: admission-card-float 5s ease-in-out infinite;
 }
 
+.hero-image-drift {
+  animation: hero-image-drift 7s ease-out both;
+}
+
+@keyframes hero-image-drift {
+  from {
+    transform: scale(1.04);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
 .country-explorer {
   animation: country-explorer-in 800ms ease-out both;
   background-image: radial-gradient(circle at 90% 0%, rgba(68, 133, 255, 0.28), transparent 34%), linear-gradient(135deg, #1d2a4a, #142955);
@@ -73,7 +87,8 @@ body {
   .country-explorer,
   .country-chip,
   .country-profile,
-  .admission-card {
+  .admission-card,
+  .hero-image-drift {
     animation: none;
   }
 }
