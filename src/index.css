@@ -2,10 +2,16 @@
 
 @theme {
   --color-ink: #1d2a4a;
-  --color-brand: #1f5fe8;
-  --color-brand-deep: #163f9e;
-  --color-gold: #d9a441;
-  --color-success: #1f9d63;
+  --color-brand: #16834a;
+  --color-brand-deep: #105c36;
+  --color-gold: #e3b51f;
+  --color-success: #16834a;
+  --color-blue-50: #effaf3;
+  --color-blue-100: #d8f2e1;
+  --color-blue-200: #b3e5c5;
+  --color-blue-300: #82d3a1;
+  --color-blue-600: #16834a;
+  --color-blue-700: #126b3d;
   --font-display: "Fraunces", ui-serif, serif;
   --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
@@ -36,7 +42,7 @@ body {
 
 .country-explorer {
   animation: country-explorer-in 800ms ease-out both;
-  background-image: radial-gradient(circle at 90% 0%, rgba(68, 133, 255, 0.28), transparent 34%), linear-gradient(135deg, #1d2a4a, #142955);
+  background-image: radial-gradient(circle at 90% 0%, rgba(71, 178, 112, 0.28), transparent 34%), linear-gradient(135deg, #1d2a4a, #105c36);
 }
 
 .country-chip {
@@ -45,6 +51,24 @@ body {
 
 .country-profile {
   animation: country-profile-in 500ms ease-out both;
+}
+
+.destination-card-enter {
+  animation: destination-card-enter 650ms ease-out both;
+}
+
+.destination-card-enter:nth-child(2) {
+  animation-delay: 140ms;
+}
+
+@keyframes destination-card-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes country-explorer-in {
@@ -87,6 +111,7 @@ body {
   .country-explorer,
   .country-chip,
   .country-profile,
+  .destination-card-enter,
   .admission-card,
   .hero-image-drift {
     animation: none;

@@ -18,7 +18,12 @@ export default function DashboardLayout({ items, title, children }) {
 
   return (
     <div className="flex min-h-screen bg-[#f7f9fc]">
-      <aside className="fixed hidden h-screen w-64 flex-col bg-ink md:flex">
+      <aside className="fixed left-0 top-0 hidden h-screen w-64 flex-col bg-ink md:flex">
+        <div className="absolute inset-x-0 top-0 flex h-1" aria-hidden="true">
+          <span className="w-1/3 bg-[#c52836]" />
+          <span className="w-1/3 bg-[#f5c842]" />
+          <span className="w-1/3 bg-brand" />
+        </div>
         <div className="flex items-center gap-2 px-5 py-5 font-display text-lg font-bold text-white">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
             <GraduationCap size={17} />
@@ -36,7 +41,7 @@ export default function DashboardLayout({ items, title, children }) {
                 to={to}
                 onClick={() => setOpen(false)}
                 className={`mb-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
-                  active ? 'bg-white text-ink' : 'text-white/70 hover:bg-white/10'
+                  active ? 'bg-brand text-white shadow-sm' : 'text-white/70 hover:bg-white/10'
                 }`}
               >
                 <Icon size={17} strokeWidth={2} />
@@ -63,6 +68,11 @@ export default function DashboardLayout({ items, title, children }) {
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
           <aside className="absolute left-0 top-0 flex h-full w-64 flex-col bg-ink">
+            <div className="absolute inset-x-0 top-0 flex h-1" aria-hidden="true">
+              <span className="w-1/3 bg-[#c52836]" />
+              <span className="w-1/3 bg-[#f5c842]" />
+              <span className="w-1/3 bg-brand" />
+            </div>
             <button className="self-end p-4 text-white" onClick={() => setOpen(false)} aria-label="Fermer">
               <X size={20} />
             </button>
@@ -83,7 +93,7 @@ export default function DashboardLayout({ items, title, children }) {
                     to={to}
                     onClick={() => setOpen(false)}
                     className={`mb-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
-                      active ? 'bg-white text-ink' : 'text-white/70 hover:bg-white/10'
+                      active ? 'bg-brand text-white shadow-sm' : 'text-white/70 hover:bg-white/10'
                     }`}
                   >
                     <Icon size={17} strokeWidth={2} />

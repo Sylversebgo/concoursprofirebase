@@ -1,39 +1,42 @@
 import { useState } from 'react';
 import { Search, MapPin, Users, Languages, Maximize2 } from 'lucide-react';
+import { COUNTRY_LEADERS } from '../../data/countryLeaders';
 
 const INTERNATIONAL_COUNTRIES = [
-  ['Allemagne', 'de', 'Berlin', '357 022 km²', '84,5 M', 'allemand', 'Europe'],
-  ['Espagne', 'es', 'Madrid', '505 990 km²', '48,4 M', 'espagnol', 'Europe'],
-  ['France', 'fr', 'Paris', '551 695 km²', '68,2 M', 'français', 'Europe'],
-  ['Italie', 'it', 'Rome', '301 340 km²', '58,8 M', 'italien', 'Europe'],
-  ['Portugal', 'pt', 'Lisbonne', '92 212 km²', '10,3 M', 'portugais', 'Europe'],
-  ['Royaume-Uni', 'gb', 'Londres', '243 610 km²', '68,4 M', 'anglais', 'Europe'],
-  ['Russie', 'ru', 'Moscou', '17 098 246 km²', '143,8 M', 'russe', 'Europe / Asie'],
-  ['Suisse', 'ch', 'Berne', '41 285 km²', '8,8 M', 'allemand, français, italien', 'Europe'],
-  ['États-Unis', 'us', 'Washington D.C.', '9 833 517 km²', '335,9 M', 'anglais', 'Amérique'],
-  ['Canada', 'ca', 'Ottawa', '9 984 670 km²', '40,1 M', 'anglais, français', 'Amérique'],
-  ['Brésil', 'br', 'Brasília', '8 515 767 km²', '216,4 M', 'portugais', 'Amérique'],
-  ['Argentine', 'ar', 'Buenos Aires', '2 780 400 km²', '45,8 M', 'espagnol', 'Amérique'],
-  ['Chili', 'cl', 'Santiago', '756 102 km²', '19,6 M', 'espagnol', 'Amérique'],
-  ['Colombie', 'co', 'Bogotá', '1 141 748 km²', '52,1 M', 'espagnol', 'Amérique'],
-  ['Mexique', 'mx', 'Mexico', '1 964 375 km²', '128,5 M', 'espagnol', 'Amérique'],
-  ['Cuba', 'cu', 'La Havane', '109 884 km²', '11,0 M', 'espagnol', 'Amérique'],
-  ['Chine', 'cn', 'Pékin', '9 596 960 km²', '1 410,7 M', 'mandarin', 'Asie'],
-  ['Inde', 'in', 'New Delhi', '3 287 263 km²', '1 428,6 M', 'hindi, anglais', 'Asie'],
-  ['Japon', 'jp', 'Tokyo', '377 975 km²', '124,5 M', 'japonais', 'Asie'],
-  ['Corée du Sud', 'kr', 'Séoul', '100 210 km²', '51,7 M', 'coréen', 'Asie'],
-  ['Indonésie', 'id', 'Jakarta', '1 904 569 km²', '277,5 M', 'indonésien', 'Asie'],
-  ['Thaïlande', 'th', 'Bangkok', '513 120 km²', '71,8 M', 'thaï', 'Asie'],
-  ['Vietnam', 'vn', 'Hanoï', '331 212 km²', '98,2 M', 'vietnamien', 'Asie'],
-  ['Arabie saoudite', 'sa', 'Riyad', '2 149 690 km²', '36,9 M', 'arabe', 'Asie'],
-  ['Émirats arabes unis', 'ae', 'Abou Dabi', '83 600 km²', '9,5 M', 'arabe', 'Asie'],
-  ['Turquie', 'tr', 'Ankara', '783 562 km²', '85,3 M', 'turc', 'Europe / Asie'],
-  ['Israël', 'il', 'Jérusalem', '22 145 km²', '9,8 M', 'hébreu, arabe', 'Asie'],
-  ['Australie', 'au', 'Canberra', '7 692 024 km²', '26,6 M', 'anglais', 'Océanie'],
-  ['Nouvelle-Zélande', 'nz', 'Wellington', '268 021 km²', '5,2 M', 'anglais, maori', 'Océanie'],
-  ['Fidji', 'fj', 'Suva', '18 274 km²', '0,9 M', 'anglais, fidjien, hindi', 'Océanie'],
-  ['Papouasie-Nouvelle-Guinée', 'pg', 'Port Moresby', '462 840 km²', '10,3 M', 'anglais, tok pisin, hiri motu', 'Océanie'],
+  ['Allemagne', 'de', 'Berlin', '357 022 km²', 83491249, 'allemand', 'Europe'],
+  ['Espagne', 'es', 'Madrid', '505 990 km²', 49355143, 'espagnol', 'Europe'],
+  ['France', 'fr', 'Paris', '551 695 km²', 68720337, 'français', 'Europe'],
+  ['Italie', 'it', 'Rome', '301 340 km²', 58915656, 'italien', 'Europe'],
+  ['Portugal', 'pt', 'Lisbonne', '92 212 km²', 10804871, 'portugais', 'Europe'],
+  ['Royaume-Uni', 'gb', 'Londres', '243 610 km²', 69487000, 'anglais', 'Europe'],
+  ['Russie', 'ru', 'Moscou', '17 098 246 km²', 143513328, 'russe', 'Europe / Asie'],
+  ['Suisse', 'ch', 'Berne', '41 285 km²', 9092436, 'allemand, français, italien', 'Europe'],
+  ['États-Unis', 'us', 'Washington D.C.', '9 833 517 km²', 341784857, 'anglais', 'Amérique'],
+  ['Canada', 'ca', 'Ottawa', '9 984 670 km²', 41651653, 'anglais, français', 'Amérique'],
+  ['Brésil', 'br', 'Brasília', '8 515 767 km²', 212812405, 'portugais', 'Amérique'],
+  ['Argentine', 'ar', 'Buenos Aires', '2 780 400 km²', 45851378, 'espagnol', 'Amérique'],
+  ['Chili', 'cl', 'Santiago', '756 102 km²', 19859921, 'espagnol', 'Amérique'],
+  ['Colombie', 'co', 'Bogotá', '1 141 748 km²', 53425635, 'espagnol', 'Amérique'],
+  ['Mexique', 'mx', 'Mexico', '1 964 375 km²', 131946900, 'espagnol', 'Amérique'],
+  ['Cuba', 'cu', 'La Havane', '109 884 km²', 10937203, 'espagnol', 'Amérique'],
+  ['Chine', 'cn', 'Pékin', '9 596 960 km²', 1406585000, 'mandarin', 'Asie'],
+  ['Inde', 'in', 'New Delhi', '3 287 263 km²', 1463865525, 'hindi, anglais', 'Asie'],
+  ['Japon', 'jp', 'Tokyo', '377 975 km²', 123366734, 'japonais', 'Asie'],
+  ['Corée du Sud', 'kr', 'Séoul', '100 210 km²', 51684564, 'coréen', 'Asie'],
+  ['Indonésie', 'id', 'Jakarta', '1 904 569 km²', 285721236, 'indonésien', 'Asie'],
+  ['Thaïlande', 'th', 'Bangkok', '513 120 km²', 71619863, 'thaï', 'Asie'],
+  ['Vietnam', 'vn', 'Hanoï', '331 212 km²', 101598527, 'vietnamien', 'Asie'],
+  ['Arabie saoudite', 'sa', 'Riyad', '2 149 690 km²', 36973555, 'arabe', 'Asie'],
+  ['Émirats arabes unis', 'ae', 'Abou Dabi', '83 600 km²', 11513149, 'arabe', 'Asie'],
+  ['Turquie', 'tr', 'Ankara', '783 562 km²', 85878556, 'turc', 'Europe / Asie'],
+  ['Israël', 'il', 'Jérusalem', '22 145 km²', 10122800, 'hébreu, arabe', 'Asie'],
+  ['Australie', 'au', 'Canberra', '7 692 024 km²', 27614411, 'anglais', 'Océanie'],
+  ['Nouvelle-Zélande', 'nz', 'Wellington', '268 021 km²', 5324700, 'anglais, maori', 'Océanie'],
+  ['Fidji', 'fj', 'Suva', '18 274 km²', 933154, 'anglais, fidjien, hindi', 'Océanie'],
+  ['Papouasie-Nouvelle-Guinée', 'pg', 'Port Moresby', '462 840 km²', 10762817, 'anglais, tok pisin, hiri motu', 'Océanie'],
 ].map(([name, code, capital, area, population, languages, continent]) => ({ name, code, capital, area, population, languages, continent }));
+
+const populationFormatter = new Intl.NumberFormat('fr-FR');
 
 export default function International() {
   const [query, setQuery] = useState('');
@@ -88,7 +91,8 @@ export default function International() {
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <div className="rounded-xl bg-blue-50 p-4"><MapPin size={18} className="text-brand" /><p className="mt-3 text-xs font-semibold text-gray-500">Capitale</p><p className="mt-1 font-bold">{selectedCountry.capital}</p></div>
             <div className="rounded-xl bg-amber-50 p-4"><Maximize2 size={18} className="text-amber-600" /><p className="mt-3 text-xs font-semibold text-gray-500">Superficie</p><p className="mt-1 font-bold">{selectedCountry.area}</p></div>
-            <div className="rounded-xl bg-emerald-50 p-4"><Users size={18} className="text-emerald-600" /><p className="mt-3 text-xs font-semibold text-gray-500">Population</p><p className="mt-1 font-bold">{selectedCountry.population}</p></div>
+            <div className="rounded-xl bg-emerald-50 p-4"><Users size={18} className="text-emerald-600" /><p className="mt-3 text-xs font-semibold text-gray-500">Population estimée (2025)</p><p className="mt-1 font-bold">{populationFormatter.format(selectedCountry.population)} habitants</p></div>
+            <div className="rounded-xl bg-amber-50 p-4"><p className="text-xs font-semibold text-gray-500">Chef d’État</p><p className="mt-2 text-xs font-semibold uppercase tracking-wide text-amber-700">{COUNTRY_LEADERS[selectedCountry.code]?.title || 'Fonction non renseignée'}</p><p className="mt-1 font-bold">{COUNTRY_LEADERS[selectedCountry.code]?.name || 'À vérifier'}</p></div>
             <div className="rounded-xl bg-rose-50 p-4"><Languages size={18} className="text-rose-600" /><p className="mt-3 text-xs font-semibold text-gray-500">Langues parlées</p><p className="mt-1 text-sm font-bold leading-5">{selectedCountry.languages}</p></div>
           </div>
         </article>

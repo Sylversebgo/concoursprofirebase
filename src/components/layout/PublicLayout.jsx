@@ -24,8 +24,13 @@ export default function PublicLayout({ children }) {
   return (
     <div className="flex min-h-screen flex-col bg-[#f7f9fc]">
       <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-black/5 bg-white px-5 md:px-10">
+        <div className="absolute inset-x-0 top-0 flex h-1" aria-hidden="true">
+          <span className="w-1/3 bg-[#c52836]" />
+          <span className="w-1/3 bg-[#f5c842]" />
+          <span className="w-1/3 bg-brand" />
+        </div>
         <Link to="/" className="flex items-center gap-2 font-display text-lg font-bold text-ink">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-brand-deep text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand to-brand-deep text-white">
             <GraduationCap size={17} />
           </span>
           ConcoursPro
@@ -48,7 +53,7 @@ export default function PublicLayout({ children }) {
           </Link>
           <Link
             to="/inscription"
-            className="ml-1 rounded-xl bg-gradient-to-br from-blue-600 to-brand-deep px-4 py-2 text-sm font-bold text-white"
+            className="ml-1 rounded-xl bg-gradient-to-br from-brand to-brand-deep px-4 py-2 text-sm font-bold text-white"
           >
             S'inscrire
           </Link>
@@ -82,7 +87,7 @@ export default function PublicLayout({ children }) {
             <Link
               to="/inscription"
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-xl bg-gradient-to-br from-blue-600 to-brand-deep px-4 py-3 text-center text-sm font-bold text-white"
+              className="mt-2 rounded-xl bg-gradient-to-br from-brand to-brand-deep px-4 py-3 text-center text-sm font-bold text-white"
             >
               S'inscrire
             </Link>
@@ -92,29 +97,42 @@ export default function PublicLayout({ children }) {
 
       <main className="flex-1">{children}</main>
 
-      <footer className="border-t border-black/5 bg-ink px-5 pt-14 pb-8 text-white/70 md:px-10">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4">
+      <footer className="relative overflow-hidden bg-[linear-gradient(135deg,#102f25_0%,#123d2c_55%,#0b3024_100%)] px-5 pt-12 pb-8 text-white/70 md:px-10">
+        <div className="absolute inset-x-0 top-0 flex h-1.5" aria-hidden="true">
+          <span className="w-1/3 bg-[#c52836]" />
+          <span className="w-1/3 bg-[#f5c842]" />
+          <span className="w-1/3 bg-brand" />
+        </div>
+        <div className="pointer-events-none absolute -right-20 top-8 h-64 w-64 rounded-full bg-brand/15 blur-3xl" aria-hidden="true" />
+        <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4">
 
           {/* Marque + description courte */}
           <div>
             <div className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-white">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-yellow-300 text-brand-deep shadow-lg shadow-black/15">
                 <GraduationCap size={17} />
               </span>
               ConcoursPro
             </div>
-            <p className="text-sm text-white/50">
+            <p className="max-w-xs text-sm leading-6 text-white/65">
               Préparation aux concours directs et professionnels.
             </p>
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-yellow-200">
+              <span className="h-2 w-2 rounded-full bg-[#c52836]" />
+              Cap sur la réussite
+            </div>
           </div>
 
           {/* Liens rapides — mêmes pages que la barre du haut */}
           <div>
-            <p className="mb-4 text-xs font-bold uppercase tracking-wide text-white/40">Navigation</p>
+            <p className="mb-4 flex items-center gap-2 border-b border-white/10 pb-3 text-xs font-bold uppercase tracking-[0.16em] text-yellow-200">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#c52836]" />
+              Navigation
+            </p>
             <ul className="flex flex-col gap-2.5 text-sm">
               {NAV.map((item) => (
                 <li key={item.to}>
-                  <Link to={item.to} className="hover:text-white">{item.label}</Link>
+                  <Link to={item.to} className="inline-block transition hover:translate-x-1 hover:text-yellow-200">{item.label}</Link>
                 </li>
               ))}
             </ul>
@@ -123,26 +141,32 @@ export default function PublicLayout({ children }) {
           {/* Services / concours proposés */}
           {/* TODO : adapte cette liste à tes vrais concours/services */}
           <div>
-            <p className="mb-4 text-xs font-bold uppercase tracking-wide text-white/40">Nos services</p>
+            <p className="mb-4 flex items-center gap-2 border-b border-white/10 pb-3 text-xs font-bold uppercase tracking-[0.16em] text-yellow-200">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#c52836]" />
+              Nos services
+            </p>
             <ul className="flex flex-col gap-2.5 text-sm">
-              <li><Link to="/concours" className="hover:text-white">Services en ligne</Link></li>
-              <li><Link to="/concours" className="hover:text-white">Conception de CV professionnel</Link></li>
+              <li><Link to="/concours" className="inline-block transition hover:translate-x-1 hover:text-yellow-200">Services en ligne</Link></li>
+              <li><Link to="/concours" className="inline-block transition hover:translate-x-1 hover:text-yellow-200">Conception de CV professionnel</Link></li>
             </ul>
           </div>
 
           {/* Contact */}
           {/* TODO : remplace le numéro et l'e-mail par les tiens */}
           <div>
-            <p className="mb-4 text-xs font-bold uppercase tracking-wide text-white/40">Contact</p>
+            <p className="mb-4 flex items-center gap-2 border-b border-white/10 pb-3 text-xs font-bold uppercase tracking-[0.16em] text-yellow-200">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#c52836]" />
+              Contact
+            </p>
             <ul className="flex flex-col gap-3 text-sm">
               <li>
-                <a href="https://wa.me/22657861564" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white">
-                  <Phone size={15} className="shrink-0" /> +226 57 86 15 64
+                <a href="https://wa.me/22657861564" target="_blank" rel="noreferrer" className="flex items-center gap-2 transition hover:text-yellow-200">
+                  <Phone size={15} className="shrink-0 text-yellow-300" /> +226 57 86 15 64
                 </a>
               </li>
               <li>
-                <a href="mailto:contact@concourspro.dev" className="flex items-center gap-2 hover:text-white">
-                  <Mail size={15} className="shrink-0" /> applearn175@gmail.com
+                <a href="mailto:contact@concourspro.dev" className="flex items-center gap-2 transition hover:text-yellow-200">
+                  <Mail size={15} className="shrink-0 text-yellow-300" /> applearn175@gmail.com
                 </a>
               </li>
               {/* Décommente si tu veux afficher une adresse plus tard :
@@ -170,11 +194,18 @@ export default function PublicLayout({ children }) {
 
         </div>
 
-        <div className="mx-auto mt-12 flex max-w-6xl flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row">
-          <p>© {new Date().getFullYear()} ConcoursPro.</p>
-          <div className="flex gap-4">
-            <Link to="/mentions-legales" className="hover:text-white">Bonne chance !</Link>
-            <Link to="/contact" className="hover:text-white">Contact</Link>
+        <div className="relative z-10 mx-auto mt-12 max-w-6xl">
+          <div className="mb-5 flex h-px overflow-hidden" aria-hidden="true">
+            <span className="w-1/3 bg-[#c52836]/80" />
+            <span className="w-1/3 bg-[#f5c842]/80" />
+            <span className="w-1/3 bg-brand/80" />
+          </div>
+          <div className="flex flex-col items-center justify-between gap-3 text-xs text-white/55 sm:flex-row">
+            <p>© {new Date().getFullYear()} ConcoursPro.</p>
+            <div className="flex gap-5">
+              <Link to="/mentions-legales" className="transition hover:text-yellow-200">Bonne chance !</Link>
+              <Link to="/contact" className="transition hover:text-yellow-200">Contact</Link>
+            </div>
           </div>
         </div>
       </footer>

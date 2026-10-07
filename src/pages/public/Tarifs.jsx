@@ -50,10 +50,18 @@ export default function Tarifs() {
                 : 'border-black/5 bg-white'
             } ${
               plan.highlight
-                ? 'md:border-brand md:bg-blue-50/40 md:ring-2 md:ring-brand'
+                ? 'relative md:border-brand md:bg-blue-50/40 md:ring-2 md:ring-brand'
                 : 'md:border-black/5 md:bg-white md:ring-0'
             }`}
           >
+            {plan.name === 'Standard' && (
+              <span
+                className="absolute right-4 top-4 rotate-6 bg-yellow-300 px-4 py-2 text-xs font-extrabold tracking-wide text-brand-deep shadow-md"
+                style={{ clipPath: 'polygon(8% 0, 100% 0, 92% 100%, 0 100%)' }}
+              >
+                5 000 F
+              </span>
+            )}
             <h3 className="text-lg font-bold text-ink">{plan.name}</h3>
             <p className="mt-2 mb-6 text-2xl font-bold text-brand">{plan.price}</p>
             <ul className="mb-8 flex flex-col gap-2.5">
